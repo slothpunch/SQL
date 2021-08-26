@@ -35,7 +35,7 @@ WHERE
 -- Use 2. and CTE (a common table expression), calculate the vaccinated rate of people 
 -- (the result of OVER clause/population) * 100, name it as vaccinated_rate
 
--- WITH table_name (col1, col2, ...)
+-- WITH table_name (col1, col2, ...) AS () SELECT
 
 WITH VAC_ROL(continent, location, date, population, new_vaccinations, rolling_out_vaccinations)
 AS (
@@ -57,11 +57,11 @@ WHERE
 SELECT *, (rolling_out_vaccinations/population)*100 AS vaccinated_rate
 FROM VAC_ROL ;
 
--- 4.
--- TEMP Table
+-- 4. 
+-- CREATE a TEMP Table and use 3. to insert values into the TEMP table.
 DROP TABLE IF EXISTS PercentagePopulationVaccinated;
 CREATE TEMPORARY TABLE PercentagePopulationVaccinated 
-(
+(	
 	continent VARCHAR(255),
     location VARCHAR(255),
     date DATETIME,
@@ -71,18 +71,21 @@ CREATE TEMPORARY TABLE PercentagePopulationVaccinated
 );
 
 INSERT INTO PercentagePopulationVaccinated
-SELECT
-		dea.continent,
-		dea.location,
-		STR_TO_DATE(dea.date, '%d/%m/%Y'),
-		dea.population,
-		vac.new_vaccinations,
-		SUM(vac.new_vaccinations) OVER (PARTITION BY dea.location ORDER BY dea.location, STR_TO_DATE(dea.date, '%d/%m/%Y')) AS Rolling_People_Vaccinated
-FROM
-		covid_deaths dea
-				JOIN
-		covid_vaccinations vac ON dea.location = vac.location
-				AND dea.date = vac.date;
+
+SELECT 
+	cd.continent,
+    cd.location,
+    cd.date,
+    cd.population,
+    cv.new_vaccinations,
+    SUM(cv.new_vaccinations) OVER(PARTITION BY cv.location ORDER BY cv.date) AS rolling_out_vaccinations
+FROM 
+	project.covid_deaths cd
+			JOIN 
+	project.covid_vaccinations cv ON cd.date = cv.date 
+			AND cd.location = cv.location
+WHERE 
+	cd.location != '';
 
 SELECT *, (Rolling_People_Vaccinated/population)*100 AS Vaccinated_Percentage
 FROM PercentagePopulationVaccinated;
@@ -90,15 +93,20 @@ FROM PercentagePopulationVaccinated;
 -- 5.
 -- Creating View to store data for later visulisation
 CREATE VIEW PercentagePopulationVaccinated AS
-SELECT
-		dea.continent,
-		dea.location,
-		STR_TO_DATE(dea.date, '%d/%m/%Y'),
-		dea.population,
-		vac.new_vaccinations,
-		SUM(vac.new_vaccinations) OVER (PARTITION BY dea.location ORDER BY dea.location, STR_TO_DATE(dea.date, '%d/%m/%Y')) AS Rolling_People_Vaccinated
-FROM
-		covid_deaths dea
-				JOIN
-		covid_vaccinations vac ON dea.location = vac.location
-				AND dea.date = vac.date;
+
+SELECT 
+	cd.continent,
+    cd.location,
+    cd.date,
+    cd.population,
+    cv.new_vaccinations,
+    SUM(cv.new_vaccinations) OVER(PARTITION BY cv.location ORDER BY cv.date) AS rolling_out_vaccinations
+FROM 
+	project.covid_deaths cd
+			JOIN 
+	project.covid_vaccinations cv ON cd.date = cv.date 
+			AND cd.location = cv.location
+WHERE 
+	cd.location != '';
+    
+SELECT * FROM project.percentagepopulationvaccinated;
