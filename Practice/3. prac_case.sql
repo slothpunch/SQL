@@ -75,7 +75,7 @@ BEGIN
 	WHERE 
 		e.emp_no = p_in_emp_no
 	ORDER BY 1 DESC;
-    
+/*    
 	CASE
 		WHEN years < 1095 THEN 
 			SET p_out_emp_years = "Less than 3 years";
@@ -90,7 +90,21 @@ BEGIN
         ELSE 
 			SET p_out_emp_years = "More than 15 years";
 	END CASE;
-
+*/
+	IF years < 1095 THEN 
+		SET p_out_emp_years = "Less than 3 years";
+	ELSEIF years >= 1095 AND years < 1825 THEN 
+		SET p_out_emp_years = "3 - 5 years";
+	ELSEIF years >= 1825 AND years < 2555 THEN 
+		SET p_out_emp_years = "5 - 7 years";
+	ELSEIF years >= 2555 AND years < 3650 THEN 
+		SET p_out_emp_years = "7 - 10 years";
+	ELSEIF years >= 3650 AND years < 5475 THEN 
+		SET p_out_emp_years = "10 - 15 years";
+	ELSE
+		SET p_out_emp_years = "More than 15 years";
+	END IF;
+    
 END $$
 
 DELIMITER ;
