@@ -55,44 +55,45 @@ FROM WorkingYears;
 DROP PROCEDURE IF EXISTS employees.WorkingYears;
 
 DELIMITER $$
-USE employees;
+USE employees $$
 
 CREATE PROCEDURE employees.WorkingYears(
-	IN p_emp_no INT,
-    OUT p_emp_years VARCHAR(20)
+	IN p_in_emp_no INT,
+    OUT p_out_emp_years VARCHAR(20)
 )
+
 BEGIN
-	DECLARE years VARCHAR(20) DEFAULT 0;
+		DECLARE years VARCHAR(20) DEFAULT 0;
     
-SELECT
-	DATEDIFF(de.from_date, e.hire_date)
-INTO years
-FROM
-	employees e
-JOIN
-	dept_emp de ON e.emp_no = de.emp_no
-WHERE 
-	e.emp_no = p_emp_no
-ORDER BY 1 DESC;
+	SELECT
+		DATEDIFF(de.from_date, e.hire_date)
+	INTO p_out_emp_years
+	FROM
+		employees e
+	JOIN
+		dept_emp de ON e.emp_no = de.emp_no
+	WHERE 
+		e.emp_no = p_in_emp_no
+	ORDER BY 1 DESC;
     
 	CASE
 		WHEN years < 1095 THEN 
-			SET p_emp_years = "Less than 3 years";
+			SET p_out_emp_years = "Less than 3 years";
 		WHEN years >= 1095 AND years < 1825 THEN 
-			SET p_emp_years = "3 - 5 years";
+			SET p_out_emp_years = "3 - 5 years";
         WHEN years >= 1825 AND years < 2555 THEN 
-			SET p_emp_years = "5 - 7 years";
+			SET p_out_emp_years = "5 - 7 years";
         WHEN years >= 2555 AND years < 3650 THEN 
-			SET p_emp_years = "7 - 10 years";
+			SET p_out_emp_years = "7 - 10 years";
         WHEN years >= 3650 AND years < 5475 THEN 
-			SET p_emp_years = "10 - 15 years";
+			SET p_out_emp_years = "10 - 15 years";
         ELSE 
-			SET p_emp_years = "More than 15 years";
+			SET p_out_emp_years = "More than 15 years";
 	END CASE;
 
 END $$
 
 DELIMITER ;
 
-
-
+CALL employees.WorkingYears(10001, @working_years);
+SELECT @working_years;
