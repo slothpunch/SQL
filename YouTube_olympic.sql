@@ -1,0 +1,209 @@
+-- ctrl + e or F5
+
+USE SQL_Practice;
+
+SELECT TOP 5 * FROM athlete_events;
+
+SELECT TOP 5 * FROM noc_regions;
+
+
+
+/*
+# YouTube - Olympic
+
+
+20 Questions
+
+1. **How many Olympic Games have been held?**
+2. **List down all Olympic Games held so far.**
+3. **Mention the total no of nations who participated in each Olympics?**
+4. **Which year saw the highest and lowest no of countries participating in the Olympics?**
+5. **Which nation has participated in all of the Olympic Games?**
+6. **Identify the sport which was played in all summer Olympics.**
+7. **Which Sports were just played only once in the Olympics?**
+8. **Fetch the total no of sports played in each Olympic Games.**
+9. **Fetch details of the oldest athletes to win a gold medal.**
+10. **Find the ratio of male and female athletes who participated in all Olympic Games.**
+11. **Fetch the top 5 athletes who have won the most gold medals.**
+12. **Fetch the top 5 athletes who have won the most medals (gold/silver/bronze).**
+13. **Fetch the top 5 most successful countries in Olympics. Success is defined by no of medals won.**
+14. **List down total gold, silver and bronze medals won by each country.**
+15. **List down total gold, silver and bronze medals won by each country corresponding to each Olympic Games.**
+16. **Identify which country won the most gold, most silver and most bronze medals in each Olympic Games.**
+17. **Identify which country won the most gold, most silver, most bronze medals and the most medals in each Olympic Games.**
+18. **Which countries have never won a gold medal but have won silver/bronze medals?**
+19. **In which Sport/event, India has won highest medals.**
+20. **Break down all Olympic Games where India won medals for Hockey and how many medals in each Olympic Games.**
+
+*/
+
+SELECT TOP 5 * FROM athlete_events;
+SELECT TOP 5 * FROM noc_regions;
+
+--1. * How many Olympic Games have been held?
+
+SELECT 
+	COUNT(DISTINCT(Games))
+FROM	
+	athlete_events; -- 51 games
+
+--2. * List down all Olympic Games held so far.
+
+SELECT 
+	DISTINCT(Games),
+	Year
+FROM	
+	athlete_events
+ORDER BY Year DESC; -- 51 games
+
+--3. * Mention the total no of nations who participated in each Olympics?
+
+SELECT 
+	Team,
+	COUNT(Team) AS 'num_of_participations'
+FROM
+	athlete_events
+GROUP BY Team;
+
+--4. *** Which year saw the highest and lowest no of countries participating in the Olympics?
+-- https://www.sqltutorial.org/sql-window-functions/sql-first_value/
+
+WITH all_countries AS
+(
+	SELECT 
+		games, 
+		nr.region
+	FROM athlete_events oh
+	JOIN noc_regions nr ON nr.noc=oh.noc
+	GROUP BY games, nr.region
+), 
+tot_countries AS
+(
+	SELECT 
+		games, 
+		count(1) AS total_countries -- count(1) == count(*)
+	FROM all_countries
+	--FROM athlete_events
+	GROUP BY games
+)
+SELECT *
+FROM tot_countries;
+
+-- Show the same result ---------------------
+
+SELECT 
+	Games, 
+	COUNT(DISTINCT(Team)) AS total_countries
+FROM athlete_events
+GROUP BY games
+ORDER BY 1;
+
+--5. *** Which nation has participated in all of the Olympic Games?
+
+SELECT 
+	Team,
+	COUNT(DISTINCT(Games)) AS game_count
+FROM athlete_events
+GROUP BY Team
+HAVING COUNT(DISTINCT(Games)) = (SELECT COUNT(DISTINCT(Games)) FROM athlete_events)
+
+--6. **Identify the sport which was played in all summer Olympics.**
+
+SELECT
+	TOP 15 *
+FROM athlete_events
+
+SELECT 
+	DISTINCT(Sport)
+FROM athlete_events
+WHERE Season = 'Summer'
+
+-- OR
+
+SELECT 
+	Sport
+FROM athlete_events
+WHERE Season = 'Summer'
+GROUP BY Sport
+
+--7. **Which Sports were just played only once in the Olympics?**
+
+SELECT
+	Sport,
+	COUNT(Sport) AS num_sport_played
+FROM athlete_events
+GROUP BY Sport
+HAVING COUNT(Sport) = 1
+
+--8. **Fetch the total no of sports played in each Olympic Games.**
+
+SELECT
+	Games,
+	COUNT(Sport) AS num_sport_played
+FROM athlete_events
+GROUP BY Games
+ORDER BY 1
+
+--9. **Fetch details of the oldest athletes to win a gold medal.**
+
+SELECT TOP 15 * FROM athlete_events
+
+SELECT
+	TOP 1 *
+FROM athlete_events
+WHERE Age <> 'NA' AND Medal = 'Gold'
+ORDER BY Age DESC;
+
+--10. **Find the ratio of male and female athletes who participated in all Olympic Games.**
+
+WITH num_male AS(
+SELECT
+	Sex,
+	COUNT(Sex) as male_count
+FROM athlete_events
+WHERE Sex = 'M'
+GROUP BY Sex
+),
+num_female AS(
+SELECT
+	Sex,
+	COUNT(Sex) as female_count
+FROM athlete_events
+WHERE Sex = 'F'
+GROUP BY Sex
+)
+SELECT
+	CONCAT('Male',' ') AS hi
+FROM athlete_events a
+JOIN num_male m ON a.Sex = m.Sex
+JOIN num_female f ON a.Sex = f.Sex
+
+
+--11. **Fetch the top 5 athletes who have won the most gold medals.**
+
+--12. **Fetch the top 5 athletes who have won the most medals (gold/silver/bronze).**
+
+--13. **Fetch the top 5 most successful countries in Olympics. Success is defined by no of medals won.**
+
+--14. **List down total gold, silver and bronze medals won by each country.**
+
+--15. **List down total gold, silver and bronze medals won by each country corresponding to each Olympic Games.**
+
+--16. **Identify which country won the most gold, most silver and most bronze medals in each Olympic Games.**
+
+--17. **Identify which country won the most gold, most silver, most bronze medals and the most medals in each Olympic Games.**
+
+--18. **Which countries have never won a gold medal but have won silver/bronze medals?**
+
+--19. **In which Sport/event, India has won highest medals.**
+
+--20. **Break down all Olympic Games where India won medals for Hockey and how many medals in each Olympic Games.**
+
+
+
+
+
+
+
+
+
