@@ -155,6 +155,32 @@ WHERE Age <> 'NA' AND Medal = 'Gold'
 ORDER BY Age DESC;
 
 --10. **Find the ratio of male and female athletes who participated in all Olympic Games.**
+-- Find the ratio of males and femals for each Olympic Game
+
+-- Each game -> Count males and females
+
+SELECT
+	Games,
+	COUNT(Games) AS num
+FROM athlete_events
+GROUP BY Games
+ORDER BY Games;
+
+WITH game AS(
+SELECT
+	Games
+FROM athlete_events
+GROUP BY Games
+),
+gender AS(
+SELECT
+	
+FROM game
+
+SELECT
+	Games,
+	
+
 
 WITH num_male AS(
 SELECT
@@ -179,17 +205,74 @@ JOIN num_male m ON a.Sex = m.Sex
 JOIN num_female f ON a.Sex = f.Sex
 
 
+
 --11. **Fetch the top 5 athletes who have won the most gold medals.**
+
+SELECT
+	TOP 5 ID, 
+	Name,
+	Medal,
+	COUNT(Medal) AS num_gold_medals
+FROM athlete_events
+WHERE Medal = 'Gold'
+GROUP BY ID, Name, Medal
+ORDER BY COUNT(Medal) DESC;
 
 --12. **Fetch the top 5 athletes who have won the most medals (gold/silver/bronze).**
 
+SELECT
+	TOP 5 ID, 
+	Name,
+	COUNT(Medal) AS num_medals
+FROM athlete_events
+WHERE Medal <> 'NA'
+GROUP BY ID, Name
+ORDER BY COUNT(Medal) DESC;
+
 --13. **Fetch the top 5 most successful countries in Olympics. Success is defined by no of medals won.**
+
+SELECT
+	TOP 5 Team AS Country, 
+	COUNT(Medal) AS num_medals
+FROM athlete_events
+WHERE Medal != 'NA'
+GROUP BY Team
+ORDER BY COUNT(Medal) DESC;
 
 --14. **List down total gold, silver and bronze medals won by each country.**
 
+SELECT
+	Team AS Country,
+	Medal,
+	COUNT(Medal) AS num_medals
+FROM athlete_events
+WHERE Medal <> 'NA'
+GROUP BY Team, Medal
+ORDER BY Team;
+
 --15. **List down total gold, silver and bronze medals won by each country corresponding to each Olympic Games.**
 
+SELECT
+	Games,
+	Team AS Country,
+	Medal,
+	COUNT(Medal) AS num_medals
+FROM athlete_events
+WHERE Medal <> 'NA'
+GROUP BY Games, Team, Medal
+ORDER BY 1, 2,
+	CASE 
+		WHEN Medal = 'Bronze' THEN 0
+		WHEN Medal = 'Silver' THEN 1
+		WHEN Medal = 'Gold' THEN 2
+		ELSE ''
+	END;
+
 --16. **Identify which country won the most gold, most silver and most bronze medals in each Olympic Games.**
+
+
+
+
 
 --17. **Identify which country won the most gold, most silver, most bronze medals and the most medals in each Olympic Games.**
 
