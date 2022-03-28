@@ -68,35 +68,24 @@ GROUP BY Team;
 --4. *** Which year saw the highest and lowest no of countries participating in the Olympics?
 -- https://www.sqltutorial.org/sql-window-functions/sql-first_value/
 
-WITH all_countries AS
-(
-	SELECT 
-		games, 
-		nr.region
-	FROM athlete_events oh
-	JOIN noc_regions nr ON nr.noc=oh.noc
-	GROUP BY games, nr.region
-), 
-tot_countries AS
-(
-	SELECT 
-		games, 
-		count(1) AS total_countries -- count(1) == count(*)
-	FROM all_countries
-	--FROM athlete_events
-	GROUP BY games
-)
-SELECT *
-FROM tot_countries;
+USE SQL_Practice;
 
--- Show the same result ---------------------
-
-SELECT 
-	Games, 
-	COUNT(DISTINCT(Team)) AS total_countries
+WITH games_con AS(
+SELECT
+	Games,
+	COUNT(DISTINCT(Team)) AS num_countries
 FROM athlete_events
-GROUP BY games
-ORDER BY 1;
+GROUP BY Games
+)
+SELECT
+	TOP 1
+	CONCAT(FIRST_VALUE(Games) OVER(ORDER BY num_countries DESC), 
+	' - ', 
+	FIRST_VALUE(num_countries) OVER(ORDER BY num_countries DESC)) AS highest_country,
+	CONCAT(FIRST_VALUE(Games) OVER(ORDER BY num_countries), 
+	' - ', 
+	FIRST_VALUE(num_countries) OVER(ORDER BY num_countries)) AS lowest_country
+FROM games_con
 
 --5. *** Which nation has participated in all of the Olympic Games?
 
