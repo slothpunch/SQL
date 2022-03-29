@@ -70,10 +70,72 @@ GROUP BY Team;
 
 USE SQL_Practice;
 
+SELECT
+	TOP 5 *
+FROM athlete_events;
+
+SELECT
+	DISTINCT NOC, region
+FROM noc_regions;
+
+SELECT
+	Games,
+	Team
+FROM athlete_events
+GROUP BY Games, Team
+ORDER BY 1;
+
+select games, nr.region, oh.NOC
+from athlete_events oh
+join noc_regions nr ON nr.noc=oh.noc
+group by games, nr.region, oh.NOC;
+
+SELECT games, Team, oh.NOC
+FROM athlete_events oh
+JOIN noc_regions nr ON nr.noc=oh.noc
+GROUP BY games, Team, oh.NOC
+ORDER BY 1;
+
+SELECT games, Team, oh.NOC, region AS country
+FROM athlete_events oh
+JOIN noc_regions nr ON nr.noc=oh.noc
+GROUP BY games, Team, oh.NOC, region
+ORDER BY 1;
+
+-- Wihout the Team column
+-- DISTINCT is not required at this moment as GROUP BY function 
+-- 206
+SELECT games, oh.NOC, region AS country
+FROM athlete_events oh
+JOIN noc_regions nr ON nr.noc=oh.noc
+WHERE games = '2016 Summer'
+GROUP BY games, oh.NOC, region
+ORDER BY 1;
+
+-- 207
+SELECT
+	DISTINCT
+	Games,
+	NOC
+FROM athlete_events
+WHERE Games = '2016 Summer'
+GROUP BY Games, NOC
+ORDER BY 2;
+
+
+SELECT
+	DISTINCT
+	Games,
+	COUNT(DISTINCT(NOC)) AS num_countries
+FROM athlete_events
+GROUP BY Games
+ORDER BY 2;
+
+
 WITH games_con AS(
 SELECT
 	Games,
-	COUNT(DISTINCT(Team)) AS num_countries
+	COUNT(DISTINCT(NOC)) AS num_countries
 FROM athlete_events
 GROUP BY Games
 )
@@ -85,7 +147,10 @@ SELECT
 	CONCAT(FIRST_VALUE(Games) OVER(ORDER BY num_countries), 
 	' - ', 
 	FIRST_VALUE(num_countries) OVER(ORDER BY num_countries)) AS lowest_country
-FROM games_con
+FROM games_con;
+
+
+
 
 --5. *** Which nation has participated in all of the Olympic Games?
 
