@@ -78,17 +78,44 @@ SELECT
 	DISTINCT NOC, region
 FROM noc_regions;
 
+-- 18 rows
 SELECT
 	Games,
 	Team
 FROM athlete_events
+WHERE Games = '1896 Summer'
 GROUP BY Games, Team
 ORDER BY 1;
 
+-- 20 rows
+SELECT games, Team, oh.NOC, region AS country
+FROM athlete_events oh
+JOIN noc_regions nr ON nr.noc=oh.noc
+WHERE Games = '1896 Summer'
+GROUP BY games, Team, oh.NOC, region
+ORDER BY 1;
+
+-- 12 rows
 select games, nr.region, oh.NOC
 from athlete_events oh
 join noc_regions nr ON nr.noc=oh.noc
+WHERE Games = '1896 Summer'
 group by games, nr.region, oh.NOC;
+
+SELECT
+	Games,
+	NOC
+FROM athlete_events
+WHERE Games = '1896 Summer'
+GROUP BY Games, NOC
+ORDER BY 1;
+
+select games, oh.NOC
+from athlete_events oh
+join noc_regions nr ON nr.noc=oh.noc
+WHERE Games = '1896 Summer'
+group by games, oh.NOC;
+
 
 SELECT games, Team, oh.NOC
 FROM athlete_events oh
@@ -105,16 +132,16 @@ ORDER BY 1;
 -- Wihout the Team column
 -- DISTINCT is not required at this moment as GROUP BY function 
 -- 206
-SELECT games, oh.NOC, region AS country
+
+SELECT games, oh.NOC
 FROM athlete_events oh
 JOIN noc_regions nr ON nr.noc=oh.noc
 WHERE games = '2016 Summer'
-GROUP BY games, oh.NOC, region
+GROUP BY games, oh.NOC
 ORDER BY 1;
 
 -- 207
 SELECT
-	DISTINCT
 	Games,
 	NOC
 FROM athlete_events
@@ -122,14 +149,56 @@ WHERE Games = '2016 Summer'
 GROUP BY Games, NOC
 ORDER BY 2;
 
+DECLARE @tCount INT;
+SET @tCount = 0;
+--SELECT @tCount := @tCount + 1 AS index, games, oh.NOC
+SELECT 
+	games, 
+	oh.NOC, 
+	ROW_NUMBER() OVER(ORDER BY oh.NOC) AS index#
+FROM athlete_events oh
+JOIN noc_regions nr ON nr.noc=oh.noc
+WHERE games = '2016 Summer'
+GROUP BY games, oh.NOC;
 
+DECLARE @tCount INT;
+SET @tCount = 0;
+SELECT @tCount := @tCount + 1 AS index, games, oh.NOC
+FROM athlete_events oh
+JOIN noc_regions nr ON nr.noc=oh.noc
+WHERE games = '2016 Summer'
+GROUP BY games, oh.NOC
+
+
+-- https://stackoverflow.com/questions/7181976/must-declare-the-scalar-variable
+-- Compare two results
+WITH t1 AS(
+-- Answer query
+SELECT 
+	games, 
+	oh.NOC
+FROM athlete_events oh
+JOIN noc_regions nr ON nr.noc=oh.noc
+WHERE games = '2016 Summer'
+GROUP BY games, oh.NOC
+),
+t2 AS(
+-- My query
 SELECT
-	DISTINCT
 	Games,
-	COUNT(DISTINCT(NOC)) AS num_countries
+	NOC
 FROM athlete_events
-GROUP BY Games
-ORDER BY 2;
+WHERE Games = '2016 Summer'
+GROUP BY Games, NOC
+)
+SELECT * FROM t1 
+except 
+SELECT * FROM t2
+UNION ALL(
+SELECT * FROM t2 
+except 
+SELECT * FROM t1);
+
 
 
 WITH games_con AS(
