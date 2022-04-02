@@ -78,6 +78,14 @@ SELECT
 	DISTINCT NOC, region
 FROM noc_regions;
 
+SELECT
+	Games,
+	COUNT(DISTINCT(Team)) AS num_countries
+FROM athlete_events
+GROUP BY Games
+ORDER BY 2;
+
+
 -- 18 rows
 SELECT
 	Games,
@@ -101,6 +109,26 @@ from athlete_events oh
 join noc_regions nr ON nr.noc=oh.noc
 WHERE Games = '1896 Summer'
 group by games, nr.region, oh.NOC;
+
+-- Game with the lowest number of countries participating
+SELECT 
+	TOP 1 games, 
+	COUNT(DISTINCT(oh.NOC)) AS lowest_num_of_countries
+FROM athlete_events oh
+JOIN noc_regions nr ON nr.noc=oh.noc
+GROUP BY games
+ORDER BY 2;
+
+-- Game with Largest number of countries participating
+SELECT 
+	TOP 1 games, 
+	COUNT(DISTINCT(oh.NOC)) AS lowest_num_of_countries
+FROM athlete_events oh
+JOIN noc_regions nr ON nr.noc=oh.noc
+GROUP BY games
+ORDER BY 2;
+
+
 
 SELECT
 	Games,
@@ -175,12 +203,12 @@ GROUP BY games, oh.NOC
 WITH t1 AS(
 -- Answer query
 SELECT 
-	games, 
+	Games, 
 	oh.NOC
 FROM athlete_events oh
 JOIN noc_regions nr ON nr.noc=oh.noc
-WHERE games = '2016 Summer'
-GROUP BY games, oh.NOC
+WHERE Games = '2016 Summer'
+GROUP BY Games, oh.NOC
 ),
 t2 AS(
 -- My query
@@ -199,7 +227,54 @@ SELECT * FROM t2
 except 
 SELECT * FROM t1);
 
+-- 1
+SELECT 
+	COUNT(*) AS '1'
+FROM athlete_events oh
+JOIN noc_regions nr ON nr.noc=oh.noc
+WHERE Games = '2016 Summer' AND oh.NOC = 'SGP';
 
+-- 2
+SELECT
+	COUNT(*) AS '2'
+FROM athlete_events
+WHERE Games = '2016 Summer' AND NOC = 'SGP';
+
+SELECT *
+FROM noc_regions
+WHERE NOC = 'SGP';
+
+SELECT *
+FROM athlete_events
+WHERE NOC = 'SGP';
+
+BEGIN TRAN;
+UPDATE noc_regions
+SET NOC = 'SGP'
+WHERE NOC = 'SIN';
+COMMIT TRAN;
+
+SELECT *
+FROM noc_regions
+WHERE region = 'Singapore';
+
+SELECT 
+	Games,
+	COUNT(DISTINCT(oh.NOC)) AS 'num_of_countries'
+FROM athlete_events oh
+JOIN noc_regions nr ON nr.noc=oh.noc
+WHERE games = '2016 Summer'
+GROUP BY Games;
+
+SELECT 
+	Games,
+	oh.noc
+FROM athlete_events oh
+JOIN noc_regions nr ON nr.noc=oh.noc
+WHERE games = '2016 Summer' AND oh.NOC = 'SGP'
+GROUP BY Games, oh.noc;
+
+-----------------------------------------------------
 
 WITH games_con AS(
 SELECT
@@ -217,8 +292,6 @@ SELECT
 	' - ', 
 	FIRST_VALUE(num_countries) OVER(ORDER BY num_countries)) AS lowest_country
 FROM games_con;
-
-
 
 
 --5. *** Which nation has participated in all of the Olympic Games?
@@ -269,13 +342,17 @@ ORDER BY 1
 
 --9. **Fetch details of the oldest athletes to win a gold medal.**
 
-SELECT TOP 15 * FROM athlete_events
-
+WITH oldest_ath AS(
 SELECT
-	TOP 1 *
+	*,
+	RANK() OVER(ORDER BY Age DESC) AS rnk
 FROM athlete_events
 WHERE Age <> 'NA' AND Medal = 'Gold'
-ORDER BY Age DESC;
+)
+SELECT *
+FROM oldest_ath
+WHERE rnk = 1;
+
 
 --10. **Find the ratio of male and female athletes who participated in all Olympic Games.**
 -- Find the ratio of males and femals for each Olympic Game
