@@ -294,42 +294,45 @@ SELECT
 FROM games_con;
 
 
---5. *** Which nation has participated in all of the Olympic Games?
+--5. Which nation has participated in all of the Olympic Games?
 
 SELECT 
 	Team,
 	COUNT(DISTINCT(Games)) AS game_count
 FROM athlete_events
 GROUP BY Team
-HAVING COUNT(DISTINCT(Games)) = (SELECT COUNT(DISTINCT(Games)) FROM athlete_events)
+HAVING COUNT(DISTINCT(Games)) = (SELECT COUNT(DISTINCT(Games)) FROM athlete_events);
 
 --6. **Identify the sport which was played in all summer Olympics.**
 
-SELECT
-	TOP 15 *
-FROM athlete_events
+WITH t1 AS(
+	SELECT 
+		COUNT(DISTINCT(Games)) AS num_of_summer_games
+		FROM athlete_events	WHERE Season = 'Summer'),
+	t2 AS (
+		SELECT Games, Sport FROM athlete_events
+		WHERE Season = 'Summer' GROUP BY Games, Sport),
+	t3 AS (
+		SELECT Sport, COUNT(Sport) AS num_of_sport_played
+		FROM t2 GROUP BY Sport
+)
+SELECT * FROM t3
+JOIN t1 ON t1.num_of_summer_games = t3.num_of_sport_played;
 
-SELECT 
-	DISTINCT(Sport)
-FROM athlete_events
-WHERE Season = 'Summer'
 
--- OR
+--7. Which Sports were just played only once in the Olympics?
+-- played only in one Olympics game. e.g. Cricket was played in the 1900 Olympic game, but not in the other Olympic games. 
 
-SELECT 
-	Sport
-FROM athlete_events
-WHERE Season = 'Summer'
-GROUP BY Sport
-
---7. **Which Sports were just played only once in the Olympics?**
-
-SELECT
+SELECT	
+	Games,
 	Sport,
-	COUNT(Sport) AS num_sport_played
+	COUNT(Sport) AS sport_played_once
 FROM athlete_events
-GROUP BY Sport
-HAVING COUNT(Sport) = 1
+GROUP BY Games, Sport
+HAVING COUNT(Sport) = 1;
+
+
+
 
 --8. **Fetch the total no of sports played in each Olympic Games.**
 
