@@ -321,18 +321,24 @@ JOIN t1 ON t1.num_of_summer_games = t3.num_of_sport_played;
 
 
 --7. Which Sports were just played only once in the Olympics?
--- played only in one Olympics game. e.g. Cricket was played in the 1900 Olympic game, but not in the other Olympic games. 
-
-SELECT	
-	Games,
-	Sport,
-	COUNT(Sport) AS sport_played_once
-FROM athlete_events
-GROUP BY Games, Sport
-HAVING COUNT(Sport) = 1;
+-- played only in one Olympics game. e.g. Cricket was played only in the 1900 Olympic game, but not in the other Olympic games. 
 
 
-
+WITH t1 AS (
+		SELECT 
+			Games,
+			Sport
+		FROM athlete_events
+		GROUP BY Games, Sport),
+	t2 AS (
+		SELECT Sport, COUNT(Sport) AS num_played FROM t1
+		GROUP BY Sport
+)
+	SELECT Games, t2.Sport, num_played
+	FROM t2
+	JOIN t1 ON t2.Sport = t1.Sport
+	WHERE num_played = 1
+	ORDER BY 1;
 
 --8. **Fetch the total no of sports played in each Olympic Games.**
 
