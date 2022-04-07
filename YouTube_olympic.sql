@@ -177,26 +177,6 @@ WHERE Games = '2016 Summer'
 GROUP BY Games, NOC
 ORDER BY 2;
 
-DECLARE @tCount INT;
-SET @tCount = 0;
---SELECT @tCount := @tCount + 1 AS index, games, oh.NOC
-SELECT 
-	games, 
-	oh.NOC, 
-	ROW_NUMBER() OVER(ORDER BY oh.NOC) AS index#
-FROM athlete_events oh
-JOIN noc_regions nr ON nr.noc=oh.noc
-WHERE games = '2016 Summer'
-GROUP BY games, oh.NOC;
-
-DECLARE @tCount INT;
-SET @tCount = 0;
-SELECT @tCount := @tCount + 1 AS index, games, oh.NOC
-FROM athlete_events oh
-JOIN noc_regions nr ON nr.noc=oh.noc
-WHERE games = '2016 Summer'
-GROUP BY games, oh.NOC
-
 
 -- https://stackoverflow.com/questions/7181976/must-declare-the-scalar-variable
 -- Compare two results
@@ -344,74 +324,30 @@ WITH t1 AS (
 
 SELECT
 	Games,
+	Sport,
 	COUNT(Sport) AS num_sport_played
 FROM athlete_events
-GROUP BY Games
-ORDER BY 1
+GROUP BY Games, Sport
+ORDER BY 1;
 
 --9. **Fetch details of the oldest athletes to win a gold medal.**
 
-WITH oldest_ath AS(
-SELECT
+WITH t1 AS(
+SELECT 
 	*,
-	RANK() OVER(ORDER BY Age DESC) AS rnk
+	RANK() OVER(ORDER BY Age DESC) AS age_rank
 FROM athlete_events
 WHERE Age <> 'NA' AND Medal = 'Gold'
 )
 SELECT *
-FROM oldest_ath
-WHERE rnk = 1;
+FROM t1
+WHERE age_rank = 1;
 
 
 --10. **Find the ratio of male and female athletes who participated in all Olympic Games.**
 -- Find the ratio of males and femals for each Olympic Game
 
 -- Each game -> Count males and females
-
-SELECT
-	Games,
-	COUNT(Games) AS num
-FROM athlete_events
-GROUP BY Games
-ORDER BY Games;
-
-WITH game AS(
-SELECT
-	Games
-FROM athlete_events
-GROUP BY Games
-),
-gender AS(
-SELECT
-	
-FROM game
-
-SELECT
-	Games,
-	
-
-
-WITH num_male AS(
-SELECT
-	Sex,
-	COUNT(Sex) as male_count
-FROM athlete_events
-WHERE Sex = 'M'
-GROUP BY Sex
-),
-num_female AS(
-SELECT
-	Sex,
-	COUNT(Sex) as female_count
-FROM athlete_events
-WHERE Sex = 'F'
-GROUP BY Sex
-)
-SELECT
-	CONCAT('Male',' ') AS hi
-FROM athlete_events a
-JOIN num_male m ON a.Sex = m.Sex
-JOIN num_female f ON a.Sex = f.Sex
 
 
 
