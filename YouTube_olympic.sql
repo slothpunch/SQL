@@ -344,11 +344,32 @@ FROM t1
 WHERE age_rank = 1;
 
 
---10. **Find the ratio of male and female athletes who participated in all Olympic Games.**
--- Find the ratio of males and femals for each Olympic Game
+--10. **Find the ratio of male and female athletes who participated in all Olympic Games. 
+-- ??? the ratio of male and female athletes in each Olympic game?
 
--- Each game -> Count males and females
-
+WITH t1 AS(
+	SELECT
+		Games,
+		Sex,
+		COUNT(Sex) AS gen_count
+	FROM athlete_events
+	GROUP BY Games, Sex
+), t2 AS(
+	SELECT 
+		Games, 
+		COUNT(1) AS total_num
+	FROM athlete_events
+	GROUP BY Games
+), t3 AS(
+	SELECT 
+		t1.Games,
+		Sex, 
+		gen_count, 
+		CONCAT(ROUND(CAST(gen_count AS FLOAT)/CAST(total_num AS FLOAT), 2)*100, '%') AS per_cent
+	FROM t1
+	JOIN t2 ON t1.Games = t2.Games
+)
+SELECT * FROM t3 ORDER BY Games, Sex DESC;
 
 
 --11. **Fetch the top 5 athletes who have won the most gold medals.**
