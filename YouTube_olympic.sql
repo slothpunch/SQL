@@ -434,6 +434,45 @@ ORDER BY 1, 2,
 		ELSE ''
 	END;
 
+/*
+Change the output format:
+
+ | Country | num_gold | num_Siver | num_Bronze 
+
+*/
+
+WITH gold AS(
+SELECT 
+	Games,
+	Team,
+	COUNT(Medal) 'num_gold'
+FROM athlete_events 
+WHERE Medal = 'Gold'
+GROUP BY Games, Team
+), silver AS(
+SELECT 
+	Team,
+	COUNT(Medal) 'num_silver'
+FROM athlete_events 
+WHERE Medal = 'silver'
+GROUP BY Team
+), bronze AS(
+SELECT 
+	Team,
+	COUNT(Medal) 'num_bronze'
+FROM athlete_events 
+WHERE Medal = 'Gold'
+GROUP BY Team
+)
+SELECT Games, ae.Team, num_gold, num_silver, num_bronze
+FROM athlete_events ae
+JOIN gold g ON ae.Team = g.Team
+JOIN silver s ON ae.Team = s.Team
+JOIN bronze b ON ae.Team = b.Team
+GROUP BY Games, ae.Team;
+
+
+
 --16. **Identify which country won the most gold, most silver and most bronze medals in each Olympic Games.**
 
 
