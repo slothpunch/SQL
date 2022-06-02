@@ -417,7 +417,7 @@ GROUP BY Team, Medal
 ORDER BY Team;
 
 --15. **List down total gold, silver and bronze medals won by each country corresponding to each Olympic Games.**
-
+-- 4296 rows
 SELECT
 	Games,
 	Team AS Country,
@@ -437,7 +437,7 @@ ORDER BY 1, 2,
 /*
 Change the output format:
 
- | Country | num_gold | num_Siver | num_Bronze 
+ | country | num_gold | num_siver | num_bronze 
 
 */
 
@@ -464,15 +464,72 @@ FROM athlete_events
 WHERE Medal = 'Gold'
 GROUP BY Team
 )
-SELECT Games, ae.Team, num_gold, num_silver, num_bronze
+SELECT ae.Games, ae.Team, num_gold, num_silver, num_bronze
 FROM athlete_events ae
 JOIN gold g ON ae.Team = g.Team
 JOIN silver s ON ae.Team = s.Team
 JOIN bronze b ON ae.Team = b.Team
-GROUP BY Games, ae.Team;
+GROUP BY ae.Games, ae.Team;
 
 
+--
 
+WITH all_medal AS( -- 39,783
+SELECT
+	Games,
+	Team,
+	Medal
+FROM athlete_events
+WHERE Medal <> 'NA'
+), gold AS(
+SELECT 
+	Games,
+	Team,
+	COUNT(Medal) 'num_gold'
+FROM all_medal 
+WHERE Medal = 'Gold'
+GROUP BY Games, Team
+)
+SELECT am.Games, am.Team, num_gold
+FROM all_medal am
+JOIN gold g ON am.Games = g.Games
+GROUP BY am.Games, am.Team
+ORDER BY 1, 2
+
+
+WITH all_medal AS( -- 39,783
+SELECT
+	Games,
+	Team,
+	Medal
+FROM athlete_events
+WHERE Medal <> 'NA'
+)
+SELECT 
+	Games,
+	Team,
+	COUNT(Medal) 'num_gold'
+FROM all_medal 
+WHERE Medal = 'Gold'
+GROUP BY Games, Team
+ORDER BY 1, 2
+
+
+SELECT
+	Games,
+	Team AS Country,
+	Medal,
+	COUNT(Medal) AS num_medals
+FROM athlete_events
+WHERE Medal <> 'NA'
+GROUP BY Games, Team, Medal
+ORDER BY 1, 2,
+	CASE 
+		WHEN Medal = 'Bronze' THEN 0
+		WHEN Medal = 'Silver' THEN 1
+		WHEN Medal = 'Gold' THEN 2
+		ELSE ''
+	END;
 --16. **Identify which country won the most gold, most silver and most bronze medals in each Olympic Games.**
 
 
