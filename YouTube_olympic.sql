@@ -514,22 +514,6 @@ WHERE Medal = 'Gold'
 GROUP BY Games, Team
 ORDER BY 1, 2
 
-
-SELECT
-	Games,
-	Team AS Country,
-	Medal,
-	COUNT(Medal) AS num_medals
-FROM athlete_events
-WHERE Medal <> 'NA'
-GROUP BY Games, Team, Medal
-ORDER BY 1, 2,
-	CASE 
-		WHEN Medal = 'Bronze' THEN 0
-		WHEN Medal = 'Silver' THEN 1
-		WHEN Medal = 'Gold' THEN 2
-		ELSE ''
-	END;
 --16. **Identify which country won the most gold, most silver and most bronze medals in each Olympic Games.**
 
 
@@ -539,6 +523,59 @@ ORDER BY 1, 2,
 --17. **Identify which country won the most gold, most silver, most bronze medals and the most medals in each Olympic Games.**
 
 --18. **Which countries have never won a gold medal but have won silver/bronze medals?**
+
+SELECT TOP 1 * FROM athlete_events;
+
+SELECT
+	COUNT(DISTINCT(Team)),     -- 1184
+	COUNT(DISTINCT(ae.NOC)),   -- 230
+	COUNT(DISTINCT(nr.NOC))    -- 230
+FROM athlete_events ae
+JOIN noc_regions nr ON ae.NOC = nr.NOC;
+
+
+WITH all_medal AS(
+SELECT
+	NOC,
+	Medal
+FROM athlete_events
+), gold AS(
+SELECT
+	NOC,
+	COUNT(Medal) 'gold'
+FROM all_medal
+WHERE Medal = 'Gold'
+GROUP BY NOC
+), silver AS(
+SELECT
+	NOC,
+	COUNT(Medal) 'silver'
+FROM all_medal
+WHERE Medal = 'Silver'
+GROUP BY NOC
+), bronze AS(
+SELECT
+	NOC,
+	COUNT(Medal) 'bronze'
+FROM all_medal
+WHERE Medal = 'Bronze'
+GROUP BY NOC
+)
+SELECT 
+	DISTINCT(am.NOC), 
+	region,
+	gold,
+	silver,
+	bronze
+FROM all_medal am
+JOIN noc_regions nr ON am.NOC = nr.NOC
+LEFT JOIN gold g ON am.NOC = g.NOC
+LEFT JOIN silver s ON am.NOC = s.NOC
+LEFT JOIN bronze b ON am.NOC = b.NOC
+WHERE gold IS NULL AND silver > 1 AND bronze > 1
+ORDER BY 1;
+
+
 
 --19. **In which Sport/event, India has won highest medals.**
 
