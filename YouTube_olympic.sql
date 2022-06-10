@@ -1,3 +1,6 @@
+
+-- D:\1. Data Analyst Portfolio\SQL\YouTube\1. Olympic
+
 -- ctrl + e or F5
 
 USE SQL_Practice;
@@ -516,40 +519,47 @@ ORDER BY 1, 2
 
 --16. **Identify which country won the most gold, most silver and most bronze medals in each Olympic Games.**
 
-SELECT *
-FROM athlete_events;
+-- Window function?
 
-WITH all_games AS(
-SELECT
-	Games,
-	NOC,
-	Medal
-FROM athlete_events
-WHERE Medal <> 'NA'
-), max_gold AS(
+WITH gold AS( -- 1112 rows
 SELECT
 	Games,
 	NOC,
 	COUNT(Medal) num_gold
-FROM all_games
+FROM athlete_events
 WHERE Medal = 'Gold'
+GROUP BY Games, NOC
+), silver AS( -- 1244 rows
+SELECT
+	Games,
+	NOC,
+	COUNT(Medal) num_silver
+FROM athlete_events
+WHERE Medal = 'Silver'
+GROUP BY Games, NOC
+), bronze AS( -- 1320 rows
+SELECT 
+	Games,
+	NOC,
+	COUNT(Medal) num_bronze
+FROM athlete_events
+WHERE Medal = 'Bronze'
 GROUP BY Games, NOC
 )
 SELECT 
-	ag.Games,
-	ag.NOC,
-	MAX(mg.num_gold)
-FROM all_games ag
-LEFT JOIN max_gold mg ON ag.Games = mg.Games
+	ae.Games,
+	ae.NOC,
+	g.num_gold AS 'num_gold'
+--	s.num_silver AS 'num_silver',
+--	b.num_bronze AS 'num_bronze'
+FROM athlete_events ae
+LEFT JOIN gold g ON ae.Games = g.Games
+LEFT JOIN silver s ON ae.Games = s.Games
+LEFT JOIN bronze b ON ae.Games = b.Games
+GROUP BY ae.Games, ae.NOC
 ORDER BY 1;
 
 
-
-SELECT 
-	Games,
-	NOC,
-	MAX(num_gold) 'max_gold'
-FROM(
 SELECT
 	Games,
 	NOC,
@@ -557,9 +567,16 @@ SELECT
 FROM athlete_events
 WHERE Medal = 'Gold'
 GROUP BY Games, NOC
-) gold
-GROUP BY Games, NOC
-ORDER BY 1;
+UNION
+SELECT
+	Games,
+	NOC,
+	COUNT(Medal) num_silver
+FROM athlete_events
+WHERE Medal = 'Silver'
+GROUP BY Games, NOC;
+
+
 
 
 SELECT 
