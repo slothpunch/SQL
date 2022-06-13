@@ -519,7 +519,11 @@ ORDER BY 1, 2
 
 --16. **Identify which country won the most gold, most silver and most bronze medals in each Olympic Games.**
 
--- Window function?
+-- Window function? X
+-- PIVOT? 
+
+
+
 
 WITH gold AS( -- 1112 rows
 SELECT
@@ -548,7 +552,7 @@ GROUP BY Games, NOC
 )
 SELECT 
 	ae.Games,
-	ae.NOC,
+--	ae.NOC,
 	g.num_gold AS 'num_gold'
 --	s.num_silver AS 'num_silver',
 --	b.num_bronze AS 'num_bronze'
@@ -556,31 +560,16 @@ FROM athlete_events ae
 LEFT JOIN gold g ON ae.Games = g.Games
 LEFT JOIN silver s ON ae.Games = s.Games
 LEFT JOIN bronze b ON ae.Games = b.Games
-GROUP BY ae.Games, ae.NOC
+GROUP BY ae.Games
 ORDER BY 1;
 
-
-SELECT
-	Games,
-	NOC,
-	COUNT(Medal) num_gold
-FROM athlete_events
-WHERE Medal = 'Gold'
-GROUP BY Games, NOC
-UNION
-SELECT
-	Games,
-	NOC,
-	COUNT(Medal) num_silver
-FROM athlete_events
-WHERE Medal = 'Silver'
-GROUP BY Games, NOC;
 
 
 
 
 SELECT 
 	Games,
+	NOC,
 	MAX(num_gold) 'max_gold'
 FROM(
 SELECT
@@ -591,8 +580,8 @@ FROM athlete_events
 WHERE Medal = 'Gold'
 GROUP BY Games, NOC
 ) gold
-GROUP BY Games
-ORDER BY 1;
+GROUP BY Games, NOC
+ORDER BY 1, 3 DESC;
 
 --17. **Identify which country won the most gold, most silver, most bronze medals and the most medals in each Olympic Games.**
 
