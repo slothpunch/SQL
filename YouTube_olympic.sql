@@ -566,7 +566,7 @@ ORDER BY 1;
 
 
 
-
+WITH test AS(
 SELECT 
 	Games,
 	NOC,
@@ -581,7 +581,55 @@ WHERE Medal = 'Gold'
 GROUP BY Games, NOC
 ) gold
 GROUP BY Games, NOC
-ORDER BY 1, 3 DESC;
+)
+SELECT 
+	Games,
+	NOC,
+	MAX(max_gold)
+FROM test
+GROUP BY Games, NOC
+ORDER BY 1, 3 DESC
+
+
+SELECT 
+	Games,
+	NOC
+--	MAX(num_gold) 'max_gold'
+FROM(
+SELECT
+	Games,
+	NOC,
+	COUNT(Medal) num_gold
+FROM athlete_events
+WHERE Medal = 'Gold'
+GROUP BY Games, NOC
+) g
+
+
+WITH all_g AS(
+SELECT
+	Games,
+	NOC,
+	COUNT(Medal) num_gold
+FROM athlete_events
+WHERE Medal = 'Gold'
+GROUP BY Games, NOC
+), max_g AS(
+SELECT
+	Games,
+	NOC,
+	MAX(num_gold) max_gold
+FROM all_g
+GROUP BY Games, NOC
+), gm_rank AS(
+SELECT 
+	*, 
+	RANK() OVER (PARTITION BY max_gold ORDER BY Games) AS gmr
+FROM max_g
+) -- END
+SELECT *
+FROM gm_rank;
+
 
 --17. **Identify which country won the most gold, most silver, most bronze medals and the most medals in each Olympic Games.**
 
@@ -639,8 +687,43 @@ WHERE gold IS NULL AND silver > 1 AND bronze > 1
 ORDER BY 1;
 
 
-
 --19. **In which Sport/event, India has won highest medals.**
+
+SELECT *
+FROM noc_regions
+WHERE region = 'India';
+
+
+WITH ind AS(
+SELECT
+	*
+FROM athlete_events
+WHERE NOC = 'IND'
+), sp AS(
+-- 345
+SELECT
+	NOC,
+	Sport,
+	COUNT(Medal) sp_medal
+FROM ind
+GROUP BY Sport, NOC
+), ev AS(
+-- 315
+SELECT
+	NOC,
+	Event,
+	COUNT(Medal) ev_medal
+FROM athlete_events
+GROUP BY Event, NOC
+)
+SELECT 
+	TOP 1
+	sp_medal sport_highest,
+	ev_medal event_highest
+FROM sp 
+JOIN ev ON sp.NOC = ev.NOC
+ORDER BY 1 DESC, 2 DESC;
+
 
 --20. **Break down all Olympic Games where India won medals for Hockey and how many medals in each Olympic Games.**
 
