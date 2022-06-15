@@ -698,7 +698,7 @@ WITH ind AS(
 SELECT
 	*
 FROM athlete_events
-WHERE NOC = 'IND'
+WHERE NOC = 'IND' AND Medal <> 'NA'
 ), sp AS(
 -- 345
 SELECT
@@ -726,6 +726,25 @@ ORDER BY 1 DESC, 2 DESC;
 
 
 --20. **Break down all Olympic Games where India won medals for Hockey and how many medals in each Olympic Games.**
+
+SELECT
+	Games,
+	Sport
+FROM athlete_events
+WHERE NOC = 'IND' AND Sport = 'Hockey'
+GROUP BY Games, Sport
+
+SELECT
+	Games,
+	Sport,
+	NOC,
+	COUNT(Medal) num_medals
+FROM athlete_events
+WHERE NOC = 'IND' AND Sport = 'Hockey' AND Medal <> 'NA'
+GROUP BY Games, Sport, NOC
+ORDER BY 1;
+
+
 
 
 
