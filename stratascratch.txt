@@ -20,5 +20,25 @@ FROM
     sf_restaurant_health_violations;
     
 
+##################################
+# Date: 29 Mar 2023              #
+# ID: ID 9728                    #
+# Q Name: Number of violations   #
+# Diff: Medium                   #
+##################################
+
+SELECT 
+    COUNT(*) num_of_violations,
+    YEAR(inspection_date) year
+FROM 
+    sf_restaurant_health_violations
+    
+WHERE
+    business_name = 'Roxanne Cafe' AND
+    violation_id IS NOT NULL
+GROUP BY YEAR(inspection_date);
+
+
+
 
 
