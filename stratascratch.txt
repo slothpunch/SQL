@@ -39,6 +39,17 @@ WHERE
 GROUP BY YEAR(inspection_date);
 
 
+###############################################
+# Date: 30 Mar 2023                           #
+# ID: ID 10353                                #
+# Q Name: Workers With The Highest Salaries   #
+# Diff: Medium                                #
+###############################################
 
-
-
+SELECT
+    worker_title
+FROM worker w
+LEFT JOIN title t
+ON w.worker_id = worker_ref_id
+WHERE salary = (SELECT MAX(salary) FROM worker)
+;
