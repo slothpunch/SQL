@@ -53,3 +53,48 @@ LEFT JOIN title t
 ON w.worker_id = worker_ref_id
 WHERE salary = (SELECT MAX(salary) FROM worker)
 ;
+
+
+##################################
+# Date: 31 Mar 2023              #
+# ID: ID 10308                   #
+# Q Name: Salaries Differences   #
+# Diff: Easy                     #
+##################################
+
+
+-- WITH cte1 AS (
+--     SELECT MAX(salary) salary
+--     FROM db_employee e
+--     JOIN db_dept d
+--     ON e.department_id = d.id
+--     WHERE d.department = 'marketing'
+--     GROUP BY d.department
+-- ), cte2 AS(
+--     SELECT MAX(salary) salary
+--     FROM db_employee e
+--     JOIN db_dept d
+--     ON e.department_id = d.id
+--     WHERE d.department = 'engineering'
+--     GROUP BY d.department
+-- )
+-- SELECT ABS(cte1.salary - cte2.salary)
+-- FROM cte1, cte2
+-- ;
+
+SELECT
+    ABS(
+    MAX(CASE WHEN department = 'marketing' THEN salary END) - 
+    MAX(CASE WHEN department = 'engineering' THEN salary END)
+    ) AS highest_salary_diff
+FROM db_employee e 
+JOIN db_dept d
+ON e.department_id = d.id;
+
+
+
+
+
+
+
+
