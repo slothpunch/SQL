@@ -122,3 +122,22 @@ FROM cte2
 
 
 
+###########################################
+# No: 6                                   #
+# Date: 04 Apr 2023                       #
+# ID: ID 9913                             #
+# Q Name: Order Details                   #
+# Diff: Easy                              #
+###########################################
+
+SELECT
+    first_name,
+    order_date,
+    order_details,
+    total_order_cost
+FROM customers c
+JOIN orders o 
+ON c.id = o.cust_id
+WHERE first_name IN ('Jill', 'Eva')
+ORDER BY cust_id
+;
