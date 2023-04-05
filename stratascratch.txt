@@ -141,3 +141,35 @@ ON c.id = o.cust_id
 WHERE first_name IN ('Jill', 'Eva')
 ORDER BY cust_id
 ;
+
+
+###########################################
+# No: 7                                   #
+# Date: 05 Apr 2023                       #
+# ID: ID 9894                             #
+# Q Name: Employee and Manager Salaries   #
+# Diff: Medium                            #
+###########################################
+
+
+SELECT 
+    e.first_name, e.salary
+FROM employee e
+JOIN employee m
+ON e.manager_id = m.id
+WHERE e.salary > m.salary
+-- If bonus is included
+-- WHERE e.salary + e.bonus > m.salary + m.bonus
+;
+
+-- Avoid use self join without WHERE clause, it provides the sqaure of the original number of records
+-- There are 30 records in a table and when I use self join on it, the output of self join is 900 records 
+
+-- SELECT 
+--    e.first_name, e.salary
+-- FROM employee e, employee m
+-- WHERE e.manager_id = m.id AND e.salary > m.salary
+-- If bonus is included
+-- WHERE e.manager_id = m.id AND e.salary + e.bonus > m.salary + m.bonus
+;
+
