@@ -173,3 +173,22 @@ WHERE e.salary > m.salary
 -- WHERE e.manager_id = m.id AND e.salary + e.bonus > m.salary + m.bonus
 ;
 
+
+###########################################
+# No: 8                                   #
+# Date: 10 Apr 2023                       #
+# ID: ID 10061                            #
+# Q Name: Popularity of Hack              #
+# Diff: Easy                              #
+###########################################
+
+SELECT
+    location,
+    AVG(CAST(popularity AS FLOAT)) avg_popularity
+FROM facebook_employees e
+JOIN facebook_hack_survey s
+ON e.id = s.employee_id
+GROUP BY location
+;
+
+
