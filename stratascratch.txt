@@ -191,4 +191,27 @@ ON e.id = s.employee_id
 GROUP BY location
 ;
 
+###########################################
+# No: 9                                   #
+# Date: 11 - Apr 2023                     #
+# ID: ID 10285                            #
+# Q Name: Acceptance Rate By Date         #
+# Diff: Medium                            #
+###########################################
 
+WITH c1 AS(
+SELECT *
+FROM fb_friend_requests
+WHERE action = 'sent'
+), c2 AS(
+SELECT *
+FROM fb_friend_requests
+WHERE action = 'accepted'
+)
+SELECT 
+    *
+FROM c1
+JOIN c2
+ON c1.date = c2.date
+
+;
