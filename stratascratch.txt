@@ -193,25 +193,29 @@ GROUP BY location
 
 ###########################################
 # No: 9                                   #
-# Date: 11 - Apr 2023                     #
+# Date: 11 - 13 Apr 2023                  #
 # ID: ID 10285                            #
 # Q Name: Acceptance Rate By Date         #
 # Diff: Medium                            #
 ###########################################
 
-WITH c1 AS(
-SELECT *
-FROM fb_friend_requests
+WITH c_sent AS(
+SELECT * FROM fb_friend_requests
 WHERE action = 'sent'
-), c2 AS(
-SELECT *
-FROM fb_friend_requests
+), c_acc AS(
+SELECT * FROM fb_friend_requests
 WHERE action = 'accepted'
 )
-SELECT 
-    *
-FROM c1
-JOIN c2
-ON c1.date = c2.date
-
+-- the total number of sent reuests is equal to the total number of rows
+SELECT
+    c_sent.date date,
+    CAST(COUNT(c_acc.date) AS FLOAT) / CAST(COUNT(c_sent.date) AS FLOAT) accpetance_rate
+FROM c_sent
+LEFT JOIN c_acc
+ON c_sent.user_id_sender = c_acc.user_id_sender AND
+c_sent.user_id_receiver = c_acc.user_id_receiver
+GROUP BY c_sent.date
+ORDER BY c_sent.date
 ;
+
+
