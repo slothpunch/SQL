@@ -196,7 +196,7 @@ GROUP BY location
 # Date: 11 - 13 Apr 2023                  #
 # ID: ID 10285                            #
 # Q Name: Acceptance Rate By Date         #
-# Diff: Medium                            #
+# Diff: Medium ???                        #
 ###########################################
 
 WITH c_sent AS(
@@ -216,6 +216,23 @@ ON c_sent.user_id_sender = c_acc.user_id_sender AND
 c_sent.user_id_receiver = c_acc.user_id_receiver
 GROUP BY c_sent.date
 ORDER BY c_sent.date
+;
+
+###########################################
+# No: 10                                  #
+# Date: 14 Apr 2023                       #
+# ID: ID 9782                             #
+# Q Name: Customer Revenue In March       #
+# Diff: Medium                            #
+###########################################
+
+SELECT
+    cust_id,
+    SUM(total_order_cost) total_revenue
+FROM orders
+WHERE MONTH(order_date) = 3
+GROUP BY cust_id
+ORDER BY SUM(total_order_cost) DESC
 ;
 
 
