@@ -235,4 +235,39 @@ GROUP BY cust_id
 ORDER BY SUM(total_order_cost) DESC
 ;
 
+###########################################
+# No: 11                                  #
+# Date: 17 Apr 2023                       #
+# ID: ID 10064                            #
+# Q Name: Highest Energy Consumption      #
+# Diff: Medium                            #
+###########################################
+
+WITH c1 AS(
+    SELECT * FROM fb_eu_energy
+    UNION
+    SELECT * FROM fb_asia_energy
+    UNION
+    SELECT * FROM fb_na_energy
+), c2 AS(
+    SELECT date, 
+        SUM(consumption) total_consumption, 
+        dense_rank() OVER (ORDER BY SUM(consumption) DESC) as ranking
+    FROM c1
+    GROUP BY date
+) 
+SELECT date, total_consumption
+FROM c2
+WHERE ranking = 1
+;
+
+
+
+
+
+
+
+
+
+
 
