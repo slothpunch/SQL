@@ -261,9 +261,31 @@ FROM c2
 WHERE ranking = 1
 ;
 
+###########################################
+# No: 12                                  #
+# Date: 18 Apr 2023                       #
+# ID: ID 10352                            #
+# Q Name: Users By Average Session Time   #
+# Diff: Medium? Hard?                     #
+###########################################
 
+WITH c1 AS(
+SELECT
+    user_id,
+    DATEDIFF(
+        second,
+        MAX(CASE WHEN action = 'page_load' THEN timestamp END),
+        MIN(CASE WHEN action = 'page_exit' THEN timestamp END)
+        ) AS session_time
+FROM facebook_web_log
+GROUP BY user_id, CAST(timestamp AS DATE)
+)
+SELECT user_id, AVG(CAST(session_time AS FLOAT))
+FROM c1
+WHERE session_time IS NOT NULL
+GROUP BY user_id
 
-
+;
 
 
 
