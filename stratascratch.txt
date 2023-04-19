@@ -284,12 +284,23 @@ SELECT user_id, AVG(CAST(session_time AS FLOAT))
 FROM c1
 WHERE session_time IS NOT NULL
 GROUP BY user_id
-
 ;
 
+###########################################
+# No: 13                                  #
+# Date: 19 Apr 2023                       #
+# ID: ID 10284                            #
+# Q Name: Popularity Percentage           #
+# Diff: Hard? Seems Medium                #
+###########################################
 
-
-
-
-
+WITH c1 AS(
+SELECT user1 FROM facebook_friends
+UNION ALL
+SELECT user2 FROM facebook_friends
+)
+SELECT *, CAST(COUNT(*) AS FLOAT)/(SELECT COUNT(DISTINCT(user1)) FROM c1) * 100 AS popularity_rate
+FROM c1
+GROUP BY user1
+;
 
