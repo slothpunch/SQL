@@ -304,3 +304,40 @@ FROM c1
 GROUP BY user1
 ;
 
+###########################################
+# No: 14                                  #
+# Date: 20 Apr 2023                       #
+# ID: ID 10299, 10128, 9917               #
+# Q Name: Finding Updated Records,        #
+# Q Name: Count the number of... ,        #
+# Q Name: Average Salaries                #
+# Diff: Easy                              #
+###########################################
+
+SELECT id, first_name, last_name, department_id, MAX(salary) current_salary
+FROM ms_employee_salary
+GROUP BY id, first_name, last_name, department_id;
+
+--
+
+SELECT COUNT(*)
+FROM oscar_nominees
+WHERE nominee = 'Abigail Breslin';
+
+--
+
+WITH cte AS(
+    SELECT department, AVG(CAST(salary AS FLOAT)) dept_avg_salary FROM employee
+    GROUP BY department
+)
+SELECT e.department, first_name, salary, dept_avg_salary
+FROM employee e
+JOIN cte c
+ON e.department = c.department
+
+OR
+
+SELECT department, first_name, salary, AVG(CAST(salary AS FLOAT)) OVER(PARTITION BY department) avg_dept_salary
+FROM employee;
+
+;
