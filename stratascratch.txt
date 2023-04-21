@@ -340,4 +340,27 @@ OR
 SELECT department, first_name, salary, AVG(CAST(salary AS FLOAT)) OVER(PARTITION BY department) avg_dept_salary
 FROM employee;
 
+###########################################
+# No: 15                                  #
+# Date: 21 Apr 2023                       #
+# ID: ID 10300                            #
+# Q Name: Premium vs Freemium             #
+# Diff: Hard                              #
+###########################################
+
+WITH c1 AS(
+    SELECT date, 
+    SUM(CASE WHEN paying_customer = 'no' THEN downloads END) AS non_paying,
+    SUM(CASE WHEN paying_customer = 'yes' THEN downloads END) AS paying
+    FROM ms_user_dimension u
+    JOIN ms_acc_dimension a ON u.acc_id = a.acc_id 
+    JOIN ms_download_facts d ON u.user_id = d.user_id
+    GROUP BY date
+) 
+SELECT *
+FROM c1
+WHERE non_paying > paying
+ORDER BY date
 ;
+
+
