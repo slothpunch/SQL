@@ -363,4 +363,30 @@ WHERE non_paying > paying
 ORDER BY date
 ;
 
+###########################################
+# No: 16                                  #
+# Date: 24 Apr 2023                       #
+# ID: ID 9905                             #
+# Q Name: Highest Target Under Manager    #
+# Diff: Medium                            #
+###########################################
+
+-- 0.02468 seconds
+SELECT first_name, target
+FROM (SELECT *, DENSE_RANK() OVER(ORDER BY target DESC) highest_target
+FROM salesforce_employees
+WHERE manager_id = 13) s
+WHERE highest_target = 1;
+
+-- 0.01555 seconds
+SELECT first_name, target
+FROM salesforce_employees
+WHERE target = (SELECT MAX(target) FROM salesforce_employees WHERE manager_id = 13) AND manager_id = 13;
+
+
+
+
+
+
+
 
