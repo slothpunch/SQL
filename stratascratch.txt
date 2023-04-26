@@ -384,9 +384,20 @@ FROM salesforce_employees
 WHERE target = (SELECT MAX(target) FROM salesforce_employees WHERE manager_id = 13) AND manager_id = 13;
 
 
+###################################################
+# No: 17                                          #
+# Date: 26 Apr 2023                               #
+# ID: ID 9650                                     #
+# Q Name: Find the top 10 ranked songs in 2010    #
+# Diff: Medium                                    #
+###################################################
 
-
-
+SELECT TOP 10 year_rank, group_name, song_name
+FROM billboard_top_100_year_end
+WHERE year = 2010
+GROUP BY year_rank, group_name, song_name
+ORDER BY year_rank
+;
 
 
 
