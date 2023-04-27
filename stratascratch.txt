@@ -399,5 +399,17 @@ GROUP BY year_rank, group_name, song_name
 ORDER BY year_rank
 ;
 
+###############################
+# No: 18                      #
+# Date: 27 Apr 2023           #
+# ID: ID 9991                 #
+# Q Name: Top Ranked Songs    #
+# Diff: Medium                #
+###############################
 
-
+SELECT trackname, COUNT(*)
+FROM spotify_worldwide_daily_song_ranking
+WHERE position = 1
+GROUP BY trackname
+ORDER BY COUNT(*) DESC
+;
