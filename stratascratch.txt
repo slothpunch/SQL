@@ -413,3 +413,28 @@ WHERE position = 1
 GROUP BY trackname
 ORDER BY COUNT(*) DESC
 ;
+
+###########################################
+# No: 19                                  #
+# Date: 28 Apr 2023                       #
+# ID: ID 9897                             #
+# Q Name: Highest Salary in Department    #
+# Diff: Medium                            #
+###########################################
+
+-- 0.02014 seconds
+
+WITH cte AS(
+    SELECT 
+        DISTINCT department,
+        MAX(salary) OVER(PARTITION BY department) highest_salary
+    FROM employee
+)
+SELECT 
+    e.department, first_name, c.highest_salary
+FROM employee e
+JOIN cte c
+ON e.department = c.department AND e.salary = c.highest_salary
+;
+
+
