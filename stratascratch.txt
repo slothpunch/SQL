@@ -437,4 +437,28 @@ JOIN cte c
 ON e.department = c.department AND e.salary = c.highest_salary
 ;
 
+###########################################
+# No: 20                                  #
+# Date: 01 May 2023                       #
+# ID: ID 10026                            #
+# Q Name: Find all wineries               #
+# Diff: Medium                            #
+###########################################
+
+SELECT DISTINCT winery
+FROM winemag_p1
+WHERE 
+    LOWER(description) LIKE '%[^A-Z]plum[^A-Z]%' OR
+    LOWER(description) LIKE '%[^A-Z]cherry[^A-Z]%' OR
+    LOWER(description) LIKE '%[^A-Z]rose[^A-Z]%' OR
+    LOWER(description) LIKE '%[^A-Z]hazelnut[^A-Z]%'
+    -- no plural?
+    -- LOWER(description) LIKE '%[^A-Z]cherr[^A-Z]%' OR
+    -- LOWER(description) LIKE '%[^A-Z]cherries[^A-Z]%' OR
+;
+
+
+
+
+
 
