@@ -474,4 +474,20 @@ GROUP BY value
 ORDER BY SUM(review_count) DESC
 ;
 
+#############################################
+# No: 22                                    #
+# Date: 03 May 2023                         #
+# ID: ID 10048, 10060                       #
+# Q Name: Top Businesses With Most Reviews, #
+# Top Cool Votes                            #
+# Diff: Medium                              #
+#############################################
 
+SELECT TOP 5 name, SUM(review_count) num_reviews 
+FROM yelp_business
+GROUP BY name
+ORDER BY SUM(review_count) DESC;
+
+SELECT business_name, review_text
+FROM yelp_reviews
+WHERE cool = (SELECT MAX(cool) FROM yelp_reviews);
