@@ -491,3 +491,30 @@ ORDER BY SUM(review_count) DESC;
 SELECT business_name, review_text
 FROM yelp_reviews
 WHERE cool = (SELECT MAX(cool) FROM yelp_reviews);
+
+
+################################################
+# No: 23                                       #
+# Date: 04 May 2023                            #
+# ID: ID 10046                                 #
+# Q Name: Top 5 States With 5 Star Businesses  #
+# Diff: Hard                                   #
+################################################
+
+-- The description for the question should be clearer 
+
+WITH cte AS (
+    SELECT 
+        state, 
+        COUNT(stars) num_businesses, 
+        DENSE_RANK() OVER (ORDER BY COUNT(stars) DESC) star_rank
+    FROM yelp_business
+    WHERE stars = 5
+    GROUP BY state
+)
+SELECT state, num_businesses
+FROM cte
+WHERE star_rank < 5
+-- WHERE star_rank < 6
+
+;
