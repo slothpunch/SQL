@@ -516,5 +516,29 @@ SELECT state, num_businesses
 FROM cte
 WHERE star_rank < 5
 -- WHERE star_rank < 6
-
 ;
+
+#######################################
+# No: 24                              #
+# Date: 05 May 2023                   #
+# ID: ID 9814                         #
+# Q Name: Counting Instances in Text  #
+# Diff: Hard                          #
+#######################################
+
+SELECT 'bull' word, COUNT(*) 'count'
+FROM google_file_store
+WHERE contents LIKE '%bull%'
+UNION ALL
+SELECT 'bear' word, COUNT(*) 'count'
+FROM google_file_store
+WHERE contents LIKE '%bear%'
+;
+
+
+
+
+
+
+
+
