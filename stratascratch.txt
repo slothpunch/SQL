@@ -536,9 +536,17 @@ WHERE contents LIKE '%bear%'
 ;
 
 
+###########################################
+# No: 25                                  #
+# Date: 08 May 2023                       #
+# ID: ID 10078                            #
+# Q Name: Find matching hosts and guests  #
+# Diff: Medium                            #
+###########################################
 
-
-
-
+SELECT DISTINCT host_id, guest_id
+FROM airbnb_hosts h
+JOIN airbnb_guests g
+ON h.nationality = g.nationality AND h.gender = g.gender;
 
 
