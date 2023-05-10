@@ -549,4 +549,18 @@ FROM airbnb_hosts h
 JOIN airbnb_guests g
 ON h.nationality = g.nationality AND h.gender = g.gender;
 
+###########################################
+# No: 26                                  #
+# Date: 09 May 2023                       #
+# ID: ID 9781                            #
+# Q Name: Find the rate of processed      #
+#         tickets for each type           #
+# Diff: Medium                            #
+###########################################
 
+SELECT 
+    type, 
+    AVG(CAST(CASE WHEN processed = 'TRUE' THEN 1 ELSE 0 END AS FLOAT)) processed_rate
+FROM facebook_complaints
+GROUP BY type
+;
