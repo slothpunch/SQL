@@ -581,8 +581,23 @@ FROM airbnb_contacts
 GROUP BY id_guest;
 
 
+###########################################
+# No: 28                                  #
+# Date: 12 May 2023                       #
+# ID: ID 10077                            #
+# Q Name: Income By Title and Gender      #
+# Diff: Medium                            #
+###########################################
 
-
+-- SUM(bonus) is used because the questions is asking the average TOTAL compensation
+SELECT employee_title, sex, AVG(salary+bonus) total_compensation
+FROM (SELECT employee_title, sex, salary, SUM(bonus) bonus
+FROM sf_employee e
+JOIN sf_bonus b
+ON e.id = b.worker_ref_id
+GROUP BY employee_title, sex, salary) s
+GROUP BY employee_title, sex
+;
 
 
 
