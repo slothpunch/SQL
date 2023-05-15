@@ -599,5 +599,20 @@ GROUP BY employee_title, sex, salary) s
 GROUP BY employee_title, sex
 ;
 
+###########################################
+# No: 29                                  #
+# Date: 15 May 2023                       #
+# ID: ID 10354                            #
+# Q Name: Most Profitable Companies       #
+# Diff: Medium                            #
+###########################################
+
+SELECT TOP 3
+company, profits, DENSE_RANK() OVER(ORDER BY profits DESC) profit_rank
+FROM forbes_global_2010_2014;
+
+
+
+
 
 
