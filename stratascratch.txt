@@ -611,8 +611,21 @@ SELECT TOP 3
 company, profits, DENSE_RANK() OVER(ORDER BY profits DESC) profit_rank
 FROM forbes_global_2010_2014;
 
+###########################################
+# No: 30                                  #
+# Date: 16 May 2023                       #
+# ID: ID 10156                            #
+# Q Name: Number of Units Per Nationality #
+# Diff: Medium                            #
+###########################################
 
-
-
+SELECT DISTINCT nationality, 
+    COUNT(unit_id) OVER(PARTITION BY nationality) num_units
+FROM airbnb_hosts h
+JOIN airbnb_units u
+ON h.host_id = u.host_id
+WHERE age < 30 AND LOWER(unit_type) = 'apartment'
+GROUP BY nationality, unit_id
+ORDER BY 2 DESC;
 
 
