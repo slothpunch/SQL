@@ -628,4 +628,19 @@ WHERE age < 30 AND LOWER(unit_type) = 'apartment'
 GROUP BY nationality, unit_id
 ORDER BY 2 DESC;
 
+###########################################
+# No: 31                                  #
+# Date: 17 May 2023                       #
+# ID: ID 9942                             #
+# Q Name: Largest Olympics                #
+# Diff: Medium                            #
+###########################################
 
+-- In case, there are the same number of participating athletes
+WITH cte AS(
+SELECT games, COUNT(DISTINCT id) num_athlete, 
+    DENSE_RANK() OVER(ORDER BY COUNT(DISTINCT id) DESC) ranking
+FROM olympics_athletes_events
+GROUP BY games
+)
+SELECT * FROM cte WHERE ranking = 1;
