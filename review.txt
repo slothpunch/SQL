@@ -1,0 +1,28 @@
+###########################################
+# No: 01                                  #
+# Date: 18 May 2023                       #
+# ID: ID 10300                            #
+# Q Name: Premium vs Freemium             #
+# Diff: Hard                              #
+###########################################
+
+WITH cte AS(
+SELECT date,
+    SUM(CASE paying_customer WHEN 'yes' THEN downloads END) paying,
+    SUM(CASE paying_customer WHEN 'no' THEN downloads END) non_paying
+FROM ms_user_dimension ud 
+JOIN ms_acc_dimension ad ON ud.acc_id = ad.acc_id
+JOIN ms_download_facts df ON ud.user_id = df.user_id
+GROUP BY date
+)
+SELECT *
+FROM cte
+WHERE non_paying > paying
+ORDER BY date;
+
+
+
+
+
+
+
