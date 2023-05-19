@@ -21,8 +21,16 @@ WHERE non_paying > paying
 ORDER BY date;
 
 
+###########################################
+# No: 02                                  #
+# Date: 19 May 2023                       #
+# ID: ID 9894                             #
+# Q Name: Employee and Manager Salaries   #
+# Diff: Medium                            #
+###########################################
 
-
-
+SELECT e1.first_name, e1.salary
+FROM employee e1, employee e2 
+WHERE e1.manager_id = e2.id AND e1.salary + e1.bonus > e2.salary + e2.bonus;
 
 
