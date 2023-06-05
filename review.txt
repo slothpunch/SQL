@@ -34,3 +34,22 @@ FROM employee e1, employee e2
 WHERE e1.manager_id = e2.id AND e1.salary + e1.bonus > e2.salary + e2.bonus;
 
 
+
+
+
+
+###########################################
+# No: 03                                  #
+# Date: 05 June 2023                      #
+# ID: ID 9942                             #
+# Q Name: Largest Olympics                #
+# Diff: Medium                            #
+###########################################
+
+SELECT games, num_ath
+FROM (SELECT games, COUNT(DISTINCT(id)) num_ath, DENSE_RANK() OVER(ORDER BY COUNT(DISTINCT(id)) DESC) ranking
+FROM olympics_athletes_events
+GROUP BY games) s
+WHERE ranking = 1
+
+
