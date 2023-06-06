@@ -34,10 +34,6 @@ FROM employee e1, employee e2
 WHERE e1.manager_id = e2.id AND e1.salary + e1.bonus > e2.salary + e2.bonus;
 
 
-
-
-
-
 ###########################################
 # No: 03                                  #
 # Date: 05 June 2023                      #
@@ -51,5 +47,18 @@ FROM (SELECT games, COUNT(DISTINCT(id)) num_ath, DENSE_RANK() OVER(ORDER BY COUN
 FROM olympics_athletes_events
 GROUP BY games) s
 WHERE ranking = 1
+
+
+###########################################
+# No: 04                                  #
+# Date: 06 June 2023                      #
+# ID: ID 10354                            #
+# Q Name: Most Profitable Companies       #
+# Diff: Medium                            #
+###########################################
+
+SELECT TOP 3 company, profits, DENSE_RANK() OVER(ORDER BY profits DESC) ranking
+FROM forbes_global_2010_2014
+
 
 
