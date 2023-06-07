@@ -61,4 +61,24 @@ SELECT TOP 3 company, profits, DENSE_RANK() OVER(ORDER BY profits DESC) ranking
 FROM forbes_global_2010_2014
 
 
+###########################################
+# No: 05                                  #
+# Date: 07 June 2023                      #
+# ID: ID 9814                             #
+# Q Name: Counting Instances in Text      #
+# Diff: Hard                              #
+###########################################
+
+SELECT 'bull' words, COUNT(contents) occurrences
+FROM google_file_store
+WHERE contents LIKE('%bull%')
+UNION ALL
+SELECT 'bear', COUNT(contents)
+FROM google_file_store
+WHERE contents LIKE('%bear%')
+;
+
+
+
+
 
