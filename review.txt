@@ -79,6 +79,30 @@ WHERE contents LIKE('%bear%')
 ;
 
 
+###########################################
+# No: 06                                  #
+# Date: 08 June 2023                      #
+# ID: ID 10285                            #
+# Q Name: Acceptance Rate By Date         #
+# Diff: Medium                            #
+###########################################
+
+WITH s AS(
+    SELECT * FROM fb_friend_requests
+    WHERE action = 'sent'
+), a AS(
+    SELECT * FROM fb_friend_requests
+    WHERE action = 'accepted'
+)
+SELECT s.date, 
+    CAST(COUNT(a.action) AS FLOAT) / CAST(COUNT(s.action) AS FLOAT) accept_rate
+FROM s
+LEFT JOIN a
+ON s.user_id_sender = a.user_id_sender AND 
+   s.user_id_receiver = a.user_id_receiver
+GROUP BY s.date
+ORDER BY s.date
+;
 
 
 
