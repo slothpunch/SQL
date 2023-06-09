@@ -104,5 +104,18 @@ GROUP BY s.date
 ORDER BY s.date
 ;
 
+###########################################
+# No: 07                                  #
+# Date: 09 June 2023                      #
+# ID: ID 9782                             #
+# Q Name: Customer Revenue In March       #
+# Diff: Medium                            #
+###########################################
 
+SELECT cust_id, SUM(total_order_cost) total_revenue
+FROM orders
+WHERE YEAR(order_date) = 2019 AND MONTH(order_date) = 3
+GROUP BY cust_id
+ORDER BY SUM(total_order_cost) DESC
+;
 
