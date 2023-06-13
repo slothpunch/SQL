@@ -119,3 +119,22 @@ GROUP BY cust_id
 ORDER BY SUM(total_order_cost) DESC
 ;
 
+###########################################
+# No: 08                                  #
+# Date: 13 June 2023                      #
+# ID: ID 9781                             #
+# Q Name: Find the rate of processed...   #
+# Diff: Medium                            #
+###########################################
+
+- SELECT *, CASE WHEN processed = 'TRUE' THEN 1 ELSE 0 END
+-- FROM facebook_complaints
+-- 2/3 --> Average 
+
+SELECT 
+    type, 
+    AVG(CAST(CASE WHEN processed = 'TRUE' THEN 1 ELSE 0 END AS FLOAT)) processed_rate
+FROM facebook_complaints
+GROUP BY type
+
+
