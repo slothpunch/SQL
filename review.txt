@@ -137,4 +137,28 @@ SELECT
 FROM facebook_complaints
 GROUP BY type
 
+###########################################
+# No: 09                                  #
+# Date: 14 June 2023                      #
+# ID: ID 10064                            #
+# Q Name: Highest Energy Consumption      #
+# Diff: Medium                            #
+###########################################
+
+WITH c1 AS(
+    SELECT * FROM fb_eu_energy
+    UNION
+    SELECT * FROM fb_asia_energy 
+    UNION
+    SELECT * FROM fb_na_energy 
+), c2 AS(
+    SELECT date, SUM(consumption) consumption, DENSE_RANK() OVER(ORDER BY SUM(consumption) DESC) ranking
+    FROM c1
+    GROUP BY date
+)
+SELECT date, consumption highest_total_energy_consumption
+FROM c2
+WHERE ranking = 1; 
+
+
 
