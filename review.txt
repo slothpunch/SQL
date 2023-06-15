@@ -160,5 +160,21 @@ SELECT date, consumption highest_total_energy_consumption
 FROM c2
 WHERE ranking = 1; 
 
+###########################################
+# No: 10                                  #
+# Date: 15 June 2023                      #
+# ID: ID 2005                             #
+# Q Name: Share of Active Users           #
+# Diff: Medium                            #
+###########################################
 
+SELECT 
+    AVG(
+        CAST(
+            CASE 
+            WHEN status = 'open' THEN 1 ELSE 0 
+            END AS FLOAT)
+        ) usa_active_user_rate
+FROM fb_active_users
+WHERE country = 'USA'
 
