@@ -178,3 +178,20 @@ SELECT
 FROM fb_active_users
 WHERE country = 'USA'
 
+###########################################
+# No: 11                                  #
+# Date: 20 June 2023                      #
+# ID: ID 10134                            #
+# Q Name: Spam Posts                      #
+# Diff: Medium                            #
+###########################################
+
+SELECT post_date,
+    SUM(
+        CASE 
+            WHEN post_keywords LIKE LOWER('%spam%') THEN 1 ELSE 0 END
+    ) * 100 / COUNT(*) spam_rate
+FROM facebook_posts p
+JOIN facebook_post_views v
+ON p.post_id = v.post_id
+GROUP BY post_date;
