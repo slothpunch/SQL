@@ -71,3 +71,22 @@ CASE
 FROM triangles
 
 
+-- ############################################################
+-- Q name: The Blunder
+-- Diff: Easy 
+-- Date: 31 July 2023
+-- ########################
+
+-- AVG(CAST (Salary AS DECIMAL)) -> 4046.750000
+-- AVG(CAST(REPLACE(Salary ,'0','') AS DECIMAL)) -> 1794.500000
+-- 2252.250000
+SELECT CEILING (AVG(CAST (Salary AS DECIMAL) - CAST(REPLACE(Salary ,'0','') AS DECIMAL)))
+FROM EMPLOYEES;
+
+
+
+
+
+
+
+
