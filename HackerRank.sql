@@ -84,8 +84,16 @@ SELECT CEILING (AVG(CAST (Salary AS DECIMAL) - CAST(REPLACE(Salary ,'0','') AS D
 FROM EMPLOYEES;
 
 
+-- ############################################################
+-- Q name: Top Earners
+-- Diff: Easy 
+-- Date: 01 August 2023
+-- ########################
 
-
+SELECT months * salary, COUNT(*)
+FROM Employee
+WHERE months * salary = (SELECT MAX(months * salary) FROM Employee)
+GROUP BY months * salary 
 
 
 
