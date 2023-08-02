@@ -95,6 +95,19 @@ FROM Employee
 WHERE months * salary = (SELECT MAX(months * salary) FROM Employee)
 GROUP BY months * salary 
 
+-- ############################################################
+-- Q name: Draw The Triangle 1
+-- Diff: Easy 
+-- Date: 02 August 2023
+-- ########################
 
+DECLARE @Pattern INT
+SET @Pattern = 20
+WHILE (@Pattern > 0 )
+BEGIN
+    -- PRINT REPLICATE('*'+space(), @Pattern)
+    PRINT REPLICATE('*'+' ', @Pattern)
+    SET @Pattern = @Pattern - 1
+END
 
 
