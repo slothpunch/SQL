@@ -110,4 +110,16 @@ BEGIN
     SET @Pattern = @Pattern - 1
 END
 
+-- ############################################################
+-- Q name: Draw The Triangle 2
+-- Diff: Easy 
+-- Date: 03 August 2023
+-- ########################
 
+DECLARE @Pattern int
+SET @Pattern = 1
+WHILE (@Pattern < 21)
+BEGIN
+    PRINT REPLICATE('*'+space(1), @Pattern)
+    SET @Pattern = @Pattern + 1
+END
