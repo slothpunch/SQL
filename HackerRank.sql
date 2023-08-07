@@ -123,3 +123,13 @@ BEGIN
     PRINT REPLICATE('*'+space(1), @Pattern)
     SET @Pattern = @Pattern + 1
 END
+
+
+-- ############################################################
+-- Q name: Weather Observation Station 18
+-- Diff: Medium 
+-- Date: 07 August 2023
+-- ########################
+
+SELECT ROUND(ABS(MAX(LAT_N)-MIN(LAT_N)) + ABS(MAX(LONG_W)-MIN(LONG_W)),4)
+FROM STATION
