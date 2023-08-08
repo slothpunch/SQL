@@ -133,3 +133,21 @@ END
 
 SELECT ROUND(ABS(MAX(LAT_N)-MIN(LAT_N)) + ABS(MAX(LONG_W)-MIN(LONG_W)),4)
 FROM STATION
+
+
+
+-- ############################################################
+-- Q name: Weather Observation Station 19 --> Something wrong with the question
+-- Diff: Medium 
+-- Date: 07 August 2023
+-- ########################
+
+SELECT 
+    CAST(
+        SQRT(
+            POWER(MIN(LONG_W) - MIN(LAT_N), 2)
+            + POWER(MAX(LONG_W) - MAX(LAT_N), 2)
+        ) 
+        AS NUMERIC(20, 4)
+        )
+FROM STATION
