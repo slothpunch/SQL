@@ -195,3 +195,13 @@ FROM facebook_posts p
 JOIN facebook_post_views v
 ON p.post_id = v.post_id
 GROUP BY post_date;
+
+
+
+Find the rate of processed tickets for each type -- 10?
+Highest Energy Consumption -- 13:45 
+
+
+
+
+
