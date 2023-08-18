@@ -205,7 +205,8 @@ Highest Energy Consumption -- 13:45
 # 17 Aug 2023 #
 Share of Active Users -- 07:00 
 Spam Posts -- 04:36
-**** Users By Average Session Time -- 19:28
+***** Users By Average Session Time -- 19:28
 
-
-
+# 18 Aug 2023 #
+***** Users By Average Session Time -- 06:37
+***** Popularity Percentage -- 19:47
