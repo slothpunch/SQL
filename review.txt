@@ -210,3 +210,9 @@ Spam Posts -- 04:36
 # 18 Aug 2023 #
 ***** Users By Average Session Time -- 06:37
 ***** Popularity Percentage -- 19:47
+
+
+# 21 Aug 2023 #
+***** Popularity Percentage -- 08:14
+***** Users By Average Session Time -- 08:45
+
