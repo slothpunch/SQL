@@ -224,3 +224,38 @@ Spam Posts -- 04:36
 ***** The Most Popular Client_Id Among Users Using Video and Voice Calls
 ***** Top percentile Fraud 18:43
 
+# 25 Aug 2023 #
+***** Top percentile Fraud -- 04:00
+*** Highest Target Under Manager -- 04:15
+
+***** The Most Popular Client_Id Among Users Using Video and Voice Calls -- 46:45
+WITH c1 AS(
+    SELECT 
+        user_id, 
+        client_id, 
+-- Sum the count that shows how many times each user_id appears
+        SUM(COUNT(user_id)) OVER(PARTITION BY user_id) user_cnt 
+    FROM fact_events
+    WHERE event_type IN ('video call received', 'video call sent', 'voice call received', 'voice call sent')
+    GROUP BY user_id, client_id
+), c2 AS(
+-- total number of users' events
+    SELECT user_id, COUNT(user_id) total_cnt
+    FROM fact_events
+    GROUP BY user_id
+), c3 AS(
+-- Join c1 and c2 and divide total_cnt by user_cnt to find the percentage of the specific events -> specific_events / total_events
+    SELECT c1.user_id, client_id, CAST(user_cnt AS FLOAT) / total_cnt AS event_rate
+    FROM c1
+    JOIN c2 ON c1.user_id = c2.user_id
+), c4 AS(
+-- Rank client_id to find the most popular client_id
+    SELECT client_id, COUNT(client_id) client_cnt,
+        DENSE_RANK() OVER(ORDER BY COUNT(client_id) DESC) client_ranking
+    FROM c3
+    WHERE event_rate >= 0.5
+    GROUP BY client_id
+)
+SELECT client_id
+FROM c4
+WHERE client_ranking = 1;
