@@ -259,3 +259,8 @@ WITH c1 AS(
 SELECT client_id
 FROM c4
 WHERE client_ranking = 1;
+
+# 28 Aug 2023 #
+*** Top percentile Fraud -- 08:40
+
+
