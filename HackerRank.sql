@@ -173,3 +173,23 @@ JOIN employee e ON m.manager_code = e.manager_code
 GROUP BY c.company_code, founder
 ORDER BY c.company_code
 ;
+
+
+-- ############################################################
+-- Q name: Ollivander's Inventory
+-- Diff: Medium 
+-- Date: 11 September 2023
+-- ########################
+
+WITH c1 AS(
+    SELECT id, age, coins_needed, power, ROW_NUMBER() OVER(PARTITION BY power, age ORDER BY power DESC, age DESC, coins_needed ASC) ranking
+    FROM wands w
+    JOIN wands_property wp ON w.code = wp.code
+    WHERE is_evil = 0
+)
+
+SELECT id, age, coins_needed, power
+FROM c1
+WHERE ranking = 1
+ORDER BY power DESC, age DESC, coins_needed ASC
+;
