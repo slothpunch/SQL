@@ -193,3 +193,28 @@ FROM c1
 WHERE ranking = 1
 ORDER BY power DESC, age DESC, coins_needed ASC
 ;
+
+-- ############################################################
+-- Q name: Retention Rate
+-- Diff: Hard 
+-- Date: 20 September 2023
+-- ########################
+
+-- Dec 2020
+WITH dec AS(
+    SELECT *
+    FROM sf_events
+    WHERE date BETWEEN '2020-12-01' AND '2020-12-31'
+), dec_rate AS(
+    SELECT account_id, CAST(COUNT(account_id) AS DECIMAL) / (SELECT COUNT(*) FROM dec) * 100 retention_rate
+    FROM dec
+    GROUP BY account_id
+)
+SELECT * FROM dec_rate
+-- SELECT * FROM dec
+-- SELECT *
+-- FROM sf_events
+-- WHERE date >= '2021-01-01'
+
+
+;
