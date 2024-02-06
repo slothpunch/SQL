@@ -264,3 +264,15 @@ WHERE client_ranking = 1;
 *** Top percentile Fraud -- 08:40
 
 
+###########################################
+# Date: 06 February 2024                  #
+# ID: ID 10351                            #
+# Q Name: Activity Rank                   #
+# Diff: Medium                            #
+###########################################
+
+SELECT from_user, 
+    COUNT(from_user) cnt, 
+    DENSE_RANK() OVER(ORDER BY COUNT(from_user) DESC, from_user) ranking
+FROM google_gmail_emails
+GROUP BY from_user;
