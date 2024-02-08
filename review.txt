@@ -266,9 +266,10 @@ WHERE client_ranking = 1;
 
 ###########################################
 # Date: 06 February 2024                  #
-# ID: ID 10351                            #
+# ID: 10351                               #
 # Q Name: Activity Rank                   #
 # Diff: Medium                            #
+# Time: 05:03                             #
 ###########################################
 
 SELECT from_user, 
@@ -276,3 +277,29 @@ SELECT from_user,
     DENSE_RANK() OVER(ORDER BY COUNT(from_user) DESC, from_user) ranking
 FROM google_gmail_emails
 GROUP BY from_user;
+
+###########################################
+# Date: 08 February 2024                  #
+# ID: 10351                               #
+# Q Name: Finding User Purchases          #
+# Diff: Medium                            #
+# Time: 12:21                             #
+###########################################
+
+WITH c1 AS (
+    SELECT user_id, 
+    ABS(
+        DATEDIFF(
+            day,
+            created_at,
+            LAG(created_at, 1) OVER (PARTITION BY user_id ORDER BY created_at)
+            )
+        ) date_diff
+    FROM amazon_transactions
+) SELECT DISTINCT user_id
+FROM c1
+WHERE date_diff BETWEEN 0 AND 7;
+
+
+
+
