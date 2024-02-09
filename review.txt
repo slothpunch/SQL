@@ -301,5 +301,22 @@ FROM c1
 WHERE date_diff BETWEEN 0 AND 7;
 
 
+###########################################
+# Date: 09 February 2024                  #
+# Q Name: New Products                    #
+# Diff: Medium                            #
+# Time: 07:20                             #
+###########################################
+
+SELECT company_name, 
+    COUNT(CASE WHEN year = 2020 THEN company_name END ) - 
+    COUNT(CASE WHEN year = 2019 THEN company_name END ) net_difference
+FROM car_launches
+GROUP BY company_name
+
+
+
+
+
 
 
