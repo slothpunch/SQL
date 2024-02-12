@@ -316,7 +316,24 @@ GROUP BY company_name
 
 
 
+###########################################
+# Date: 12 February 2024                  #
+# Q Name: Monthly Percentage Difference   #
+# Diff: Hard                              #
+# Time: 00:00                             #
+###########################################
 
+WITH cte1 AS(
+    SELECT SUM(value) revenue, SUBSTRING(created_at, 1, 7) year_month
+    FROM sf_transactions
+    GROUP BY MONTH(created_at), SUBSTRING(created_at, 1, 7)
+), cte2 AS(
+    SELECT *, LAG(revenue,1) OVER(ORDER BY year_month) prev_mth_revenue
+    FROM cte1
+)
+SELECT year_month, revenue, prev_mth_revenue,
+    ROUND((CAST(revenue - prev_mth_revenue AS FLOAT) / prev_mth_revenue) * 100, 2) mom_percentage_change
+FROM cte2;
 
 
 
