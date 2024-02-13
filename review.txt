@@ -335,5 +335,24 @@ SELECT year_month, revenue, prev_mth_revenue,
     ROUND((CAST(revenue - prev_mth_revenue AS FLOAT) / prev_mth_revenue) * 100, 2) mom_percentage_change
 FROM cte2;
 
+###########################################
+# Date: 13 February 2024                  
+# Q Name: Salaries Differences            
+# Diff: Easy???                           
+# Time: 00:00                             
+###########################################
 
+WITH cte1 AS (
+    SELECT department, MAX(salary) salary
+    FROM db_employee e
+    JOIN db_dept d
+    ON e.department_id = d.id
+    WHERE d.department = 'marketing' OR d.department = 'engineering'
+    GROUP BY d.department
+)
+SELECT 
+    (SELECT MAX(salary) FROM cte1 WHERE department = 'marketing'),
+    (SELECT MAX(salary) FROM cte1 WHERE department = 'engineering')
+FROM cte1
 
+;
