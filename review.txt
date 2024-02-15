@@ -356,3 +356,51 @@ SELECT
 FROM cte1
 
 ;
+
+
+###########################################
+# Date: 15 February 2024                  
+# Q Name: Risky Projects          
+# Diff: Medium                           
+# Time: 31:25                             
+###########################################
+
+-- Problem with calculating the total employee expense 
+-- Round to the next dollar amount -> ROUND() or CEILING()?? 
+-- (SUM(salary) * (DATEDIFF(day, start_date, end_date)*1.0)) / 365 
+-- (SUM((salary*1.0)/365) * (DATEDIFF(day, start_date, end_date)))
+
+
+-- 1. Calculate the duration of each project
+-- SELECT *
+--     , DATEDIFF(day, start_date, end_date) duration
+-- FROM linkedin_projects p 
+
+-- 2. Calculate the daily? salary of emplyees -> salary/365
+-- SELECT *,
+--     -- salary/365 daily_rate
+--     ROUND(CAST(salary AS FLOAT)/365, 1) daily_rate
+-- FROM linkedin_employees e
+
+-- 3. Check if the sum of employees' salaries is greater than the budget 
+
+SELECT * 
+FROM (
+    SELECT 
+        title, 
+        budget,
+            CEILING(
+                (SUM(salary*1.0)/365 * (DATEDIFF(day, start_date, end_date)))
+                -- (SUM(salary) * (DATEDIFF(day, start_date, end_date)*1.0)) / 365 
+                )total_emp_expense
+    FROM linkedin_projects p 
+    JOIN linkedin_emp_projects l ON p.id = l.project_id
+    JOIN linkedin_employees e ON e.id = l.emp_id
+    GROUP BY title, budget, start_date, end_date) s1
+WHERE budget < total_emp_expense 
+ORDER BY title
+
+
+
+
+
