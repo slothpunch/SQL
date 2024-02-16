@@ -401,6 +401,32 @@ WHERE budget < total_emp_expense
 ORDER BY title
 
 
+# Practice #
 
+-- CASE without NULL returns 
+SELECT 
+	season,
+    date,
+	home_goal,
+	away_goal
+FROM matches_italy
+WHERE 
+-- Exclude games not won by Bologna
+	CASE 
+		WHEN hometeam_id = 9857 AND home_goal > away_goal THEN 'Bologna Win'
+		WHEN awayteam_id = 9857 AND away_goal > home_goal THEN 'Bologna Win' 
+		END IS NOT NULL;
+
+
+SELECT 
+	c.name AS country,
+    -- Count games from the 2012/2013 season
+	COUNT(CASE WHEN m.season = '2012/2013' 
+					-- ELSE values NULL
+        	THEN m.id ELSE NULL END) AS matches_2012_2013 
+FROM country AS cp
+LEFT JOIN match AS m
+ON c.id = m.country_id
+GROUP BY country;
 
 
