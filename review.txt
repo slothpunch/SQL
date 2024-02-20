@@ -417,7 +417,6 @@ WHERE
 		WHEN awayteam_id = 9857 AND away_goal > home_goal THEN 'Bologna Win' 
 		END IS NOT NULL;
 
-
 SELECT 
 	c.name AS country,
     -- Count games from the 2012/2013 season
@@ -428,5 +427,23 @@ FROM country AS cp
 LEFT JOIN match AS m
 ON c.id = m.country_id
 GROUP BY country;
+
+
+SELECT
+	s.stage,
+	ROUND(s.avg_goals, 2) avg_goal,
+	(SELECT AVG(home_goal + away_goal)
+	 FROM match
+	 WHERE season = '2012/2013') overall_avg
+FROM
+	(SELECT
+		stage,
+		AVG(home_goal + away_goal) avg_goals 
+	 FROM match
+	 WHERE season = '2012/2013'
+	 GROUP BY stage) AS s
+WHERE s.avg_goals > (SELECT AVG(home_goal + away_goal)
+			FROM match AS m
+			WHERE s.stage > m.stage);
 
 
