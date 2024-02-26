@@ -26,3 +26,30 @@ WHERE
   -- Use an INTERVAL for the upper bound of the rental_date 
   r.rental_date BETWEEN CAST('2005-05-01' AS DATE) 
   AND CAST('2005-05-01' AS DATE) + INTERVAL '90 day';
+
+-- User-defined data types and functions
+CREATE TYPE type_name AS data_type(
+  ...
+)
+
+-- Select the user-defined data types
+-- Query the system table call pg_type to get info about all data types available 
+-- in your DB both user-defined and built-in
+SELECT typname, typcategory
+FROM pg_type 
+WHERE typname = 'type_name';
+-- OR
+-- udt_name for a user-defined data type contains the value of the name provided
+-- when creating the data type using the CREATE TYPE command. 
+SELECT column_name, data_type, udt_name
+FROM INFORMATION_SCHEMA.COLUMNS
+WHERE table_name = 'film';
+
+CREATE FUNCTION squared(I integer) RETURNS integer AS $$
+	BEGIN
+		RETURN i * i;
+	END;
+-- $$ specifies that the function will be using SQL as the language 
+$$ LANGUAGE plpgsql;
+
+SELECT squared(5)
