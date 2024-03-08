@@ -53,3 +53,14 @@ CREATE FUNCTION squared(I integer) RETURNS integer AS $$
 $$ LANGUAGE plpgsql;
 
 SELECT squared(5)
+
+SELECT company_original.name, title, rank
+  FROM company AS company_original
+	   LEFT JOIN company AS company_parent
+       ON company_original.parent_id = company_parent.id
+       INNER JOIN fortune500 
+       -- Use parent ticker if there is one, otherwise original ticker
+       ON coalesce(company_parent.ticker, 
+                   company_original.ticker) = 
+             fortune500.ticker
+ ORDER BY rank; 
