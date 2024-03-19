@@ -64,3 +64,22 @@ SELECT company_original.name, title, rank
                    company_original.ticker) = 
              fortune500.ticker
  ORDER BY rank; 
+
+
+SELECT 
+    TO_CHAR(date_created, 'day') AS day, 
+    AVG(date_completed - date_created) AS duration
+FROM evanston311 
+GROUP BY day, EXTRACT(DOW FROM date_created)
+ORDER BY EXTRACT(DOW FROM date_created);
+
+SELECT 
+    DATE_TRUNC('month', day) AS month,
+    AVG(count)
+ -- Subquery to compute daily counts: 1 - 31
+FROM (SELECT DATE_TRUNC('day', date_created) AS day,
+	  COUNT(*) AS count
+          FROM evanston311
+         GROUP BY day) AS daily_count
+GROUP BY month
+ORDER BY month;
